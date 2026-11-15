@@ -11,7 +11,7 @@
 
 ## wide.74 HUD 測試版
 
-**[下載 wide.74 測試 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.74)** · **[功能示意圖、新竹市地圖選擇、搭配分支與 Carrot Web 設定](docs/WIDE74_HUD_zh-TW.md)**
+**[下載 wide.74 測試 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.74)** · **[功能示意圖、各地圖可顯示的效果、搭配分支與 Carrot Web 設定](docs/WIDE74_HUD_zh-TW.md)**
 
 wide.74 新增兩版高德的 HUD 地圖影像，並包含高德車機版測速紅光與分區一全幅。建議先停車驗收。
 
