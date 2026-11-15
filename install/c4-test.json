@@ -1,0 +1,42 @@
+{
+  "device": "comma four / MICI",
+  "source_url": "https://installer.comma.ai/commaai/nightly-dev",
+  "source_headers": {
+    "User-Agent": "AGNOSSetup-19.8",
+    "X-openpilot-device-type": "mici"
+  },
+  "source_sha256": "8e44055e93f01b0ecca8eaf47c50f2dec993ace2c291907a6ee941a62bf28997",
+  "repository": "https://github.com/FANHAOHSIANG/openpilot-carrot.git",
+  "branch": "test/carrot-wip-upstream-20261104",
+  "branch_head_at_verification": "796633626c61ef0fa9486ba0898a970b99f2d31a",
+  "tracks_branch": true,
+  "size_bytes": 2051392,
+  "sha256": "0f4d978aea9d76a77b611ec388ddd92e525d8c0866fb77ee30fcde0ac98b956c",
+  "literal_changes": [
+    {
+      "offset": 830740,
+      "size": 105,
+      "before": "https://github.com/commaai/openpilot.git?                                                                ",
+      "after": "https://github.com/FANHAOHSIANG/openpilot-carrot.git?                                                    "
+    },
+    {
+      "offset": 830846,
+      "size": 73,
+      "before": "nightly-dev?                                                             ",
+      "after": "test/carrot-wip-upstream-20261104?                                       "
+    },
+    {
+      "offset": 830936,
+      "size": 23,
+      "before": "/data/.openpilot_cache",
+      "after": "/data/.cb1104_no_cache"
+    },
+    {
+      "offset": 831190,
+      "size": 14,
+      "before": "installing...",
+      "after": "TEST BRANCH"
+    }
+  ],
+  "validation": "ELF and read-only literal changes checked offline; not installed or boot-tested on C4"
+}

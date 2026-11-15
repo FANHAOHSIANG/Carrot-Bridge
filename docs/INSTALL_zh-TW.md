@@ -2,9 +2,9 @@
 
 適用於 **Carrot Bridge wide.70**，支援 Android 12 以上手機或車機。
 
-[回首頁與下載清單](../README.md#下載) · [直接下載主程式 APK](https://github.com/FANHAOHSIANG/copilot-Tw/releases/download/wide.70/Carrot-Bridge-wide.70.apk) · [GitHub 發布說明](https://github.com/FANHAOHSIANG/copilot-Tw/releases/tag/wide.70)
+[回首頁與下載清單](../README.md#下載與需求) · [完整功能手冊](FEATURES_zh-TW.md) · [官方／測試分支操作](C4_BRANCHES_zh-TW.md) · [C4 測試分支安裝](C4_TEST_INSTALL_zh-TW.md) · [直接下載主程式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.70/Carrot-Bridge-wide.70.apk) · [GitHub 發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.70)
 
-wide.70 沿用 wide.69 的簽章憑證。[wide.70 更新與操作](../variants/wide70/README.md) · [wide.69 舊版操作](https://github.com/FANHAOHSIANG/copilot-Tw/blob/7be17e22bc2997281dae7a9dd1ffc7381a2d6f7e/docs/INSTALL_zh-TW.md)
+wide.70 沿用 wide.69 的簽章憑證。[wide.70 更新與操作](../variants/wide70/README.md) · [wide.69 舊版操作](https://github.com/FANHAOHSIANG/Carrot-Bridge/blob/7be17e22bc2997281dae7a9dd1ffc7381a2d6f7e/docs/INSTALL_zh-TW.md)
 
 ## 1. 安裝或更新
 
@@ -72,6 +72,6 @@ Carrot Bridge 內建「Amap2Tesla 僅投神盾」。準備神盾和投屏授權�
 | 視窗調整後仍不合框 | 記下 App 版本、手機或車機型號、Android 版本與目前投屏來源，附問題畫面及診斷報告。 |
 | APK 無法安裝 | 檢查 Android 版本、檔案是否完整，以及既有 App 的套件簽章。 |
 
-主 APK 的 SHA-256 列在 [wide.70 發布說明](https://github.com/FANHAOHSIANG/copilot-Tw/releases/tag/wide.70)。macOS 可用 `shasum -a 256 檔名.apk`，Linux 可用 `sha256sum 檔名.apk`，Windows PowerShell 可用 `Get-FileHash 檔名.apk -Algorithm SHA256`。
+主 APK 的 SHA-256 列在 [wide.70 發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.70)。macOS 可用 `shasum -a 256 檔名.apk`，Linux 可用 `sha256sum 檔名.apk`，Windows PowerShell 可用 `Get-FileHash 檔名.apk -Algorithm SHA256`。
 
-[wide.40 舊版說明](https://github.com/FANHAOHSIANG/copilot-Tw/blob/0299f57241f1baeccabb1e8e12c96565d52fd1c2/docs/INSTALL_zh-TW.md)
+[wide.40 舊版說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/blob/0299f57241f1baeccabb1e8e12c96565d52fd1c2/docs/INSTALL_zh-TW.md)

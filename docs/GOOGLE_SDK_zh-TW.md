@@ -1,6 +1,6 @@
 # Carrot Bridge 內建 Google 導航 NOO 設定
 
-本章適用於 Carrot Bridge wide.68 至 wide.70。內建 Google 導航 NOO 使用 Google Navigation SDK 與地點搜尋，請先安裝 [Carrot Bridge](../README.md#下載)。裝置需有 Google Play 服務、網路與精確定位。
+本章適用於 Carrot Bridge wide.68 至 wide.70。內建 Google 導航 NOO 使用 Google Navigation SDK 與地點搜尋，請先安裝 [Carrot Bridge](../README.md#下載與需求)。裝置需有 Google Play 服務、網路與精確定位。
 
 1. 在 Carrot Bridge 開啟「分區二 ⋯ → Google 導航串接與金鑰 → 開啟 Google 金鑰／導航」。也可以選擇「Google 導航 NOO」後，在內建畫面按「設定／更換 Google 金鑰」。舊版入口見 [wide.69 說明](../variants/wide69/README.md)。
 2. 按「複製套件名稱與 SHA-1」。上述正式 APK 的套件皆為 `com.jixiexiaoge.drivingassist.wide`，簽章 SHA-1 皆為 `AD:32:96:3B:94:DF:5E:30:DB:1B:24:EC:D6:2B:B9:11:F8:8D:48:7E`。設定時以實際安裝版本複製出的資料為準。
