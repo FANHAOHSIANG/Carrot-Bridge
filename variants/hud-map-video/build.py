@@ -1,9 +1,10 @@
-"""Build the unsigned Android HUD map experiment from the released wide.70 APK."""
+"""Build the unsigned Android HUD map experiment from the signed wide.73 APK."""
 import argparse
 from hashlib import file_digest
 from pathlib import Path
 import re
 import shutil
+import struct
 import subprocess
 import tempfile
 from zipfile import ZipFile
@@ -43,9 +44,16 @@ def build(args, work):
 
     unaligned, aligned = work / "unaligned.apk", work / "aligned.apk"
     with ZipFile(args.base) as original, ZipFile(unaligned, "w") as target:
+        manifest = original.read("AndroidManifest.xml")
+        for old, new in (("wide.73".encode("utf-16le"), "wide.74".encode("utf-16le")),
+                         (struct.pack("<I", 26110785), struct.pack("<I", 26110786))):
+            if manifest.count(old) != 1:
+                raise ValueError("Unexpected APK manifest")
+            manifest = manifest.replace(old, new)
+        changes = {dex.name: dex.read_bytes(), "AndroidManifest.xml": manifest}
         for entry in original.infolist():
             if not SIGNATURE.fullmatch(entry.filename):
-                target.writestr(entry, dex.read_bytes() if entry.filename == dex.name else original.read(entry))
+                target.writestr(entry, changes[entry.filename] if entry.filename in changes else original.read(entry))
     run(args.zipalign, "-P", "16", "-f", "4", unaligned, aligned)
     run(args.zipalign, "-P", "16", "-c", "4", aligned)
     with ZipFile(args.base) as original, ZipFile(aligned) as target:
@@ -55,7 +63,7 @@ def build(args, work):
         if set(target.namelist()) != expected:
             raise ValueError("Unexpected APK entries")
         changed = {name for name in expected if target.read(name) != original.read(name)}
-        if changed != {dex.name}:
+        if changed != changes.keys():
             raise ValueError(f"Unexpected APK payload changes: {changed}")
     with args.output.open("xb") as target, aligned.open("rb") as source:
         shutil.copyfileobj(source, target)
@@ -70,7 +78,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     with args.base.open("rb") as source:
         if file_digest(source, "sha256").hexdigest() != BASE_SHA256:
-            parser.error("Expected the exact released wide.70 APK")
+            parser.error("Expected the exact signed wide.73 APK")
     if args.output.exists():
         parser.error("Choose a new output filename")
     with tempfile.TemporaryDirectory(prefix="bridge-hud-map-") as temp:

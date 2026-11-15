@@ -1,16 +1,16 @@
-"""Attach HUD map capture to the exact wide.70 projection and Navi v2 ABI."""
+"""Attach HUD map capture to the exact wide.73 projection and Navi v2 ABI."""
 from pathlib import Path
 
 PREFIX = "Lcom/navipilot/obf/"
 HUD = PREFIX + "HudMapVideo;"
 PANE = PREFIX + "WideDirect$Pane;"
 SESSION = PREFIX + "WideDirect$Session;"
-BASE_SHA256 = "3b6860407433ccb558a6e063c8bafd10d5e7d914b88eb174a6e2281676cd875a"
+BASE_SHA256 = "ebb65c8f206421ec7e7752a66bc5b195a8d948aabc57d22f9868bd8348ab6830"
 
 
 def once(text, before, after):
     if text.count(before) != 1:
-        raise ValueError(f"Unexpected wide.70 anchor: {before[:100]!r}")
+        raise ValueError(f"Unexpected wide.73 anchor: {before[:100]!r}")
     return text.replace(before, after, 1)
 
 
