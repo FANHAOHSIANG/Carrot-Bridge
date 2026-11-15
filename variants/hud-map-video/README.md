@@ -2,7 +2,7 @@
 
 Carrot Bridge 可以將已啟動投屏的高德車機版或一般版分區，以最高 5 FPS 的 JPEG 影像送到 comma 的 Navi v2 `render:map_main`。畫面保留高德本身的地圖、路線與畫面上的提示。試作只取高德的投屏分區，畫面經現有區網連線送出。開關預設關閉。
 
-[功能示意圖、新竹市地圖選擇、搭配分支與 Carrot Web 設定](../../docs/WIDE74_HUD_zh-TW.md)
+[功能示意圖、各地圖可顯示的效果、搭配分支與 Carrot Web 設定](../../docs/WIDE74_HUD_zh-TW.md)
 
 ## 停車測試
 
