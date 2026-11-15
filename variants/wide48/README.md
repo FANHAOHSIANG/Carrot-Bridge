@@ -2,7 +2,7 @@
 
 Based on signed wide.47; preserves AMap diagnostics.
 
-- Place C4/GPS speed source above the actual vehicle speed. Label the red ring 道路速限.
+- Place comma/GPS speed source above the actual vehicle speed. Label the red ring 道路速限.
 - Reduce the speed-limit numeral size to fit three digits inside the ring.
 - Keep unconfirmed/historical/nearby enforcement references in the secondary strip, without a large numerical countdown. Only confirmed AHEAD enforcement can take the primary reminder.
 - Label idle camera search explicitly: 測速搜尋中 / 無已確認目標.

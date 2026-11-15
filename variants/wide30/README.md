@@ -10,6 +10,6 @@ wide.29 的右側框架有預留高度，但內部視圖只填滿寬度。包住
 
 ## 驗證及重建
 
-`verification/android.json` 記錄 APK 校驗和簽章比對，`verification/emulator.json` 記錄模擬器測試結果。原始碼包內的 Java 檢查涵蓋導航來源、GPS 權限與自動啟動、資料過期、附近候選、距離縮放和示範畫面。實車 GPS 與 C4 行為需在車機上驗證。
+`verification/android.json` 記錄 APK 校驗和簽章比對，`verification/emulator.json` 記錄模擬器測試結果。原始碼包內的 Java 檢查涵蓋導航來源、GPS 權限與自動啟動、資料過期、附近候選、距離縮放和示範畫面。實車 GPS 與 comma 行為需在車機上驗證。
 
 重建請將 wide.29 APK 放在 `inputs/taiwan.apk`。用 `COPILOT_ANDROID_TOOLS` 指定 Android SDK 建置工具，以 `COPILOT_SIGNING_KEY`、`COPILOT_STORE_PASSWORD` 和 `COPILOT_KEY_PASSWORD` 指定本機簽章資料，再執行 `bash compile.sh` 和 `bash build_variant.sh taiwan`。原始碼包沒有 APK 或私有金鑰。

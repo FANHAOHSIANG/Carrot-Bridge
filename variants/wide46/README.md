@@ -1,6 +1,6 @@
 # wide.46：科技執法提醒、Google 導航與可重建交付
 
-版本 `9.3.1-wide.46-enforcement-google`，versionCode `26110758`。由已交付的 wide.45 延續，加入科技執法畫面／語音、修正 Google 下一步距離，並保留既有導航來源選擇及原 C4 Navi v2 傳送路徑。
+版本 `9.3.1-wide.46-enforcement-google`，versionCode `26110758`。由已交付的 wide.45 延續，加入科技執法畫面／語音、修正 Google 下一步距離，並保留既有導航來源選擇及原 comma Navi v2 傳送路徑。
 
 ## 完成內容
 
@@ -9,7 +9,7 @@
 - 右側儀表上方顯示車速、接管狀態及可用速限；下方顯示目前主要提醒，並在測速或 Google 轉彎佔主卡時保留科技執法次提示。
 - 新增「更多 → 科技執法提醒與診斷」：開關、離線中文 TTS 試聽與安裝入口、診斷文字、GPS 測試紀錄 ZIP。
 - 提醒固定 3 秒定位有效期，停止／清除不能被延遲結果重新發布。相同定位時刻的負面道路結果優先於 raw callback；語音綁定資料世代、公告、分類與適用記錄，舊句不能在方向／條件改變後沿用。
-- Google mapper 改傳下一步與當前步的間距，讓已核對的 C4 receiver 只加上當前距離一次。180 m＋260 m＝440 m，修正歷史雙重累加成 620 m。
+- Google mapper 改傳下一步與當前步的間距，讓已核對的 comma receiver 只加上當前距離一次。180 m＋260 m＝440 m，修正歷史雙重累加成 620 m。
 - 配套 [CP Google 導航 0.1.1](../google-navdash/README.md) 縮小 Places 欄位、防抖與 session token、修正錯誤提示及停止／換路線的非同步回呼。
 
 科技執法新功能只輸出畫面與聲音，不產生道路速限、目標車速或自動減速欄位。道路或公告無法證明的狀態會保留在分層顯示，而不是猜成本車可用控制資料。
@@ -28,7 +28,7 @@
 | Runtime／Voice 生命週期 | 46 項通過；使用真實 production 類別與 Android 邊界 stub |
 | 儀表繪圖 | 316 項斷言、13 個記錄布局，0 字形重疊或越界發現 |
 | Google mapper | 38 項通過 |
-| 固定 SHA 的實際 C4 receiver 合約 | 21 項通過 |
+| 固定 SHA 的實際 comma receiver 合約 | 21 項通過 |
 | Google companion | 8 個 JUnit、8 個金鑰生命週期斷言；另有遠端正常建置結果 |
 | 最終 APK | 同簽章、16 KiB 對齊；3,839 個原類別不變 |
 | 精確 hooks | 5 處，移除新增呼叫後原方法完整還原 |
@@ -40,7 +40,7 @@
 
 UI 圖為相同 production 繪圖程式的示意資料預覽，不是裝置截圖。低於完整卡片尺寸的舊 fallback 只驗介面銜接；其舊繪圖實作未在這批預覽內重新驗證。
 
-**尚未實際連接使用者 Android、Google 個人 Key／帳單或 C4。** 安裝、TTS 可聽性、SDK 真實授權、背景行為及 C4 收件按 [裝置驗收](../../docs/DEVICE_ACCEPTANCE_zh-TW.md) 操作並記錄。
+**尚未實際連接使用者 Android、Google 個人 Key／帳單或 comma。** 安裝、TTS 可聽性、SDK 真實授權、背景行為及 comma 收件按 [裝置驗收](../../docs/DEVICE_ACCEPTANCE_zh-TW.md) 操作並記錄。
 
 ## 安裝與使用
 

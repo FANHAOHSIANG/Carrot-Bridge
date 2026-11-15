@@ -27,7 +27,7 @@ Navigation SDK 已包含地圖類別，因此專案排除重複的 `play-service
 2. 開啟 App，按「設定／更換 Google 金鑰」，在「我的 Google 導航金鑰」輸入自己的 key。
 3. 用「複製套件名稱與 SHA-1」取得目前實際安裝 APK 的套件名稱及簽章憑證 SHA-1，填入 Google Cloud 的 Android 應用程式限制；API 限制也須包含實際使用的服務。
 4. 儲存後按「開始 Google 導航」，接受 Google 條款及授予定位等權限。儲存 key 只代表本機保存成功，不代表 Google 已通過授權。
-5. 主 CP 搭子選「更多 → CP Google 導航」，完成原有投屏與 C4 連線設定。
+5. 主 CP 搭子選「更多 → CP Google 導航」，完成原有投屏與 comma 連線設定。
 
 本版只從 App 設定頁接收 key，不將 key 編入 manifest、Gradle 或 `local.properties`。`GoogleKeySettings` 用 Android Keystore AES/GCM 加密，儲存於 `noBackupFilesDir/google-key-v1.bin`。Main／Guidance Activity 被 Android 恢復時也會先檢查初始化。
 
@@ -50,11 +50,11 @@ Navigation SDK 已包含地圖類別，因此專案排除重複的 `play-service
 
 `NavHttpServer` 只綁定 loopback，接受 GET `/health`、`/nav`、`/route`。`/nav` 含程序 `sessionId`、路線 `routeVer`、實際 NavInfo 回呼 `navAgeMs`、位置 `ageMs`、模擬旗標、當前步驟、後續最多 3 步及剩餘行程。`/route` 含相同 session／version 與 `[lat,lng]` 座標。
 
-下一步 `distFromPrev` 保留 Google SDK 的「與前一步間距」。配套主程式 wide46 的 `variants/google-bridge46` 按已核對的 C4 receiver 合約傳送間距，由 C4 加上目前距離：180 m current、260 m gap，最終為 440 m。歷史 wide44／45 的相加行為已由 wide46 修正。
+下一步 `distFromPrev` 保留 Google SDK 的「與前一步間距」。配套主程式 wide46 的 `variants/google-bridge46` 按已核對的 comma receiver 合約傳送間距，由 comma 加上目前距離：180 m current、260 m gap，最終為 440 m。歷史 wide44／45 的相加行為已由 wide46 修正。
 
 主程式檢查程序、路線版本、來源選擇與 3 秒資料時效；停止、重新規劃、模擬、失效或切換來源時撤銷資料。路線 session／version 必須相符，主程式最多送連續 256 點。不從 Google 臆造道路速限、測速點或紅綠燈。
 
-「CoPilot 本機通道：正在讀取」表示主 CP 在本機取得資料；「已交給原有 Navi v2 傳送流程」表示手機端交付，兩者都不是 C4 接收或車輛控制成功回報。
+「CoPilot 本機通道：正在讀取」表示主 CP 在本機取得資料；「已交給原有 Navi v2 傳送流程」表示手機端交付，兩者都不是 comma 接收或車輛控制成功回報。
 
 ## 從原始碼建置
 
@@ -80,4 +80,4 @@ release 產物：`app/build/outputs/apk/release/app-release-unsigned.apk`，未�
 - [Google Places 欄位](https://developers.google.com/maps/documentation/places/android-sdk/place-details)。
 - [Google Places 狀態碼](https://developers.google.com/maps/documentation/places/android-sdk/reference/com/google/android/libraries/places/api/net/PlacesStatusCodes)。
 
-尚未用真實 key 執行搜尋／導航，未完成 Android 車機投屏、實際 SDK Messenger 傳送端身分、C4 接收或道路行為驗證。編譯與 host replay 不能代替裝置結果。
+尚未用真實 key 執行搜尋／導航，未完成 Android 車機投屏、實際 SDK Messenger 傳送端身分、comma 接收或道路行為驗證。編譯與 host replay 不能代替裝置結果。

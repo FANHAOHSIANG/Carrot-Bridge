@@ -15,7 +15,7 @@
 
 右側儀表顯示車速、接管狀態、有效速限與主要提醒；測速或 Google 轉彎優先時仍保留科技執法次提示。停止、定位過期、道路判定降級或公告適用內容改變，舊語音會撤銷。
 
-Google 的 next distance 改交付步驟間距，已核對的 C4 receiver 再加 current 一次：180 m＋260 m＝440 m。配套 0.1.1 只索取 Place Details ID／LAT_LNG，加入搜尋防抖、session token 修正及非同步取消；不保證零費用。
+Google 的 next distance 改交付步驟間距，已核對的 comma receiver 再加 current 一次：180 m＋260 m＝440 m。配套 0.1.1 只索取 Place Details ID／LAT_LNG，加入搜尋防抖、session token 修正及非同步取消；不保證零費用。
 
 ## 驗證及實際限制
 
@@ -25,7 +25,7 @@ Google 的 next distance 改交付步驟間距，已核對的 C4 receiver 再加
 
 2,148 筆官方公告中 1,152 筆有座標。合成道路情境得到 56 筆確定方向與 229 筆方向待確認語音提議；這不是實車覆蓋率，也不代表所有公告設備仍有效。
 
-**尚未以使用者手機、Google 個人 Key／帳單或 C4 完成實際驗收。** 請依附帶的 Device-Acceptance-zh-TW.md 分別確認安裝、離線中文 TTS、背景定位、導航、本機讀取及 C4 接收。完整 Google Cloud 申請、設定與使用見 CP-Google-Navigation-Complete-Guide-zh-TW.md；原始來源的 docs/GOOGLE_SDK_zh-TW.md 保留相同完整內容及官方引用。
+**尚未以使用者手機、Google 個人 Key／帳單或 comma 完成實際驗收。** 請依附帶的 Device-Acceptance-zh-TW.md 分別確認安裝、離線中文 TTS、背景定位、導航、本機讀取及 comma 接收。完整 Google Cloud 申請、設定與使用見 CP-Google-Navigation-Complete-Guide-zh-TW.md；原始來源的 docs/GOOGLE_SDK_zh-TW.md 保留相同完整內容及官方引用。
 
 ## 維護材料
 

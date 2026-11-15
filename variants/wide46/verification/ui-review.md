@@ -26,7 +26,7 @@
 
 次提醒條原先把所有非確認、非沿路資料縮成「鄰近科技執法」，可能丟失歷史／未啟用等 REFERENCE 限定。維護者已讓 REFERENCE 顯示「執法公告參考」，並以真實引擎產生的參考 Alert 加入回歸檢查。
 
-目前圖中 108 km/h 是明確的邊界測試值，不是實際 C4／GPS 車速。科技執法 Alert 是真實 production 引擎讀入 synthetic 公告、道路與三筆定位之後得到的結果，沒有直接呼叫或改開私有建構子。
+目前圖中 108 km/h 是明確的邊界測試值，不是實際 comma／GPS 車速。科技執法 Alert 是真實 production 引擎讀入 synthetic 公告、道路與三筆定位之後得到的結果，沒有直接呼叫或改開私有建構子。
 
 ## 預覽與重跑
 
@@ -45,4 +45,4 @@ python variants/wide46/tests/ui/run_checks.py --strict-layout
 
 寬度小於 230 或高度小於 280 時，production 會退回 `WideLiveCameraFace`。本測試對舊版備援使用醒目標示的 stub，**未視覺驗證其車況、Google 轉彎或舊測速布局**；只檢查分支與新科技執法條仍執行。左側導航畫面也沒有在這些右卡圖中冒充 production 渲染。
 
-本報告未測試 Google API 授權、資料庫實際位置、Android 背景服務、GPS 行進結果、語音播放或 C4 控制傳輸；這些由對應核心與整合驗證負責。
+本報告未測試 Google API 授權、資料庫實際位置、Android 背景服務、GPS 行進結果、語音播放或 comma 控制傳輸；這些由對應核心與整合驗證負責。

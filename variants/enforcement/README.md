@@ -1,6 +1,6 @@
 # 全台科技執法資料層（尚未接入已發布 APK）
 
-此模組將官方公告整理成獨立離線圖層，與既有 `tw_cameras.json` 分開。不是已部署的 UI 或語音功能，也不寫入 C4 的速限／減速封包。
+此模組將官方公告整理成獨立離線圖層，與既有 `tw_cameras.json` 分開。不是已部署的 UI 或語音功能，也不寫入 comma 的速限／減速封包。
 
 `src/WideEnforcementCatalog.java` 使用 Android 內建 org.json；建構時傳入 assets 中 `tw_enforcement.json` 的 UTF-8 內容。請於背景執行緒載入，定位更新後以 `nearby(lat, lon, 2000, bearingOrNull, todayISO)` 查詢。不需目的地或導航路線；目前是周邊直線距離查詢，不是前方道路 2 公里路徑。
 

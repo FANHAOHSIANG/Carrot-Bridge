@@ -7,6 +7,6 @@
 - 回放使用道路中心、精度 9 m、每秒一筆，沿既有圖資生成，非使用者行車紀錄。此全量回放覆蓋道路配對路徑；新增未配對點的幾何備援只有單元情境測試，未做全台實路驗證。
 - APK 已完成編譯、v3 原簽章比對、16 KiB 對齊、反解 helper 引用及來源對照。圖資／原有音訊／原生函式庫未改。
 - WideBridge、WideHcop、WideHcopRoad、Tracker、MG、高德預調速與合併、h4 解析器、e4 接收器等 10 個類別與基底 byte-for-byte 相同。
-- 沒有 Android 車機安裝、語音輸出、真實 GPS 回放、C4 接收或實際減速測試。高德來源診斷不代表送達 C4。
+- 沒有 Android 車機安裝、語音輸出、真實 GPS 回放、comma 接收或實際減速測試。高德來源診斷不代表送達 comma。
 
 重現全量回放：沿用 variants/wide37/audit/prepare.py，以 wide.40 APK assets 產生 tiles 與 mapped.tsv；編譯 wide41 的 src、tests 依賴及 FullCameraAudit.java。過期測試改為檢查 camera==null（新版撤銷失效顯示，不能再以回傳原物件的 identity 作判斷）。舊版使用原 identity 檢查。TSV 是實際輸出。

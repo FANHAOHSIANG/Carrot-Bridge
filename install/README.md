@@ -1,4 +1,4 @@
-# C4 test-branch installer
+# comma four test-branch installer
 
 User instructions and warning: [繁體中文安裝指南](../docs/C4_TEST_INSTALL_zh-TW.md).
 
@@ -7,7 +7,7 @@ User instructions and warning: [繁體中文安裝指南](../docs/C4_TEST_INSTAL
 - Repository: `https://github.com/FANHAOHSIANG/openpilot-carrot.git`
 - Branch: `test/carrot-wip-upstream-20261104`
 
-It follows that branch at installation time. It does not pin the vehicle software to the commit recorded in the manifest. It is not an Android APK and has not been installed or boot-tested on a physical C4.
+The installer follows the branch at installation time. Physical installation and first boot on comma four remain unverified.
 
 ## Provenance and modifications
 
@@ -29,4 +29,4 @@ python3 install/prepare_installer.py /path/to/verified-comma-mici-installer inst
 
 If the endpoint changes its bytes, the preparer refuses them. Review the new base and validation before changing the fixed hash; do not silently accept a different installer. Files `c4-test.json` and `c4-test.sha256` describe the result.
 
-This publishes an experimental install path. Real C4 installation, AGNOS compatibility, first boot, and vehicle acceptance remain unverified. Do not describe an HTTP download or an offline ELF check as a successful device installation.
+This publishes an experimental install path for comma four. AGNOS compatibility and vehicle acceptance remain unverified.

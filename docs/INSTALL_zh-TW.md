@@ -1,8 +1,8 @@
 # Carrot Bridge 安裝與使用
 
-適用於 **Carrot Bridge wide.70**，支援 Android 12 以上手機或車機。
+適用於 **Carrot Bridge wide.70**，支援 Android 12 以上手機或車機。C3、C3X 和 comma four 可透過區域網路連線，須使用支援 Carrot Navi v2 的 Carrot 版本。
 
-[回首頁與下載清單](../README.md#下載與需求) · [完整功能手冊](FEATURES_zh-TW.md) · [官方／測試分支操作](C4_BRANCHES_zh-TW.md) · [C4 測試分支安裝](C4_TEST_INSTALL_zh-TW.md) · [直接下載主程式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.70/Carrot-Bridge-wide.70.apk) · [GitHub 發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.70)
+[回首頁與下載清單](../README.md#下載與需求) · [完整功能手冊](FEATURES_zh-TW.md) · [官方設定建議](CARROT_SETTINGS_zh-TW.md) · [外接 HUD](HUD_zh-TW.md) · [分支比較](C4_BRANCHES_zh-TW.md) · [comma four 測試分支安裝](C4_TEST_INSTALL_zh-TW.md) · [直接下載主程式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.70/Carrot-Bridge-wide.70.apk)
 
 wide.70 沿用 wide.69 的簽章憑證。[wide.70 更新與操作](../variants/wide70/README.md) · [wide.69 舊版操作](https://github.com/FANHAOHSIANG/Carrot-Bridge/blob/7be17e22bc2997281dae7a9dd1ffc7381a2d6f7e/docs/INSTALL_zh-TW.md)
 
@@ -36,17 +36,17 @@ wide.70 沿用 wide.69 的簽章憑證。[wide.70 更新與操作](../variants/w
 
 橫向畫面中，右側 App 投屏為分區一，左側地圖為分區二。未投屏時會在各區顯示名稱。拖曳分隔線即可調整視窗比例。放開後畫面會重新適配，等比填滿時邊緣可能短暫裁切。橫向與直向的比例各自保存。
 
-## 4. OSM、神盾與 C4 診斷
+## 4. OSM、神盾與 comma 診斷
 
 從分區一或分區二的投屏選單開啟設定，可調整下列三項。
 
 | 設定 | 行為 |
 | --- | --- |
 | 顯示 OSM 速限牌 | 控制地圖上的速限牌。長按可移動，缺少有效路段資料時顯示「—」。 |
-| 傳送道路速限至 C4（TDX／OSM） | 開啟後，優先送符合道路與方向的 TDX 速限，其次送符合配對條件的 OSM 速限。資料衝突、過期或無法確認時撤銷。 |
+| 傳送道路速限（TDX／OSM） | 開啟後，優先送符合道路與方向的 TDX 速限，其次送符合配對條件的 OSM 速限。資料衝突、過期或無法確認時撤銷。 |
 | 神盾紅光提醒、取樣與尺寸保護 | 開啟後保留辨識所需的最小視窗，並將影格取樣寫入診斷。辨識到 500 公尺內的固定式或移動式測速點後，App 四邊閃紅光。神盾事件目前用於 App 提醒與診斷。 |
 
-Android 和 C4 須互通。在 App 的連線設定填實際 C4 位址，確認即時車況資料持續更新。「Navi v2」可用來查看 App 的引導處理狀態。要確認 C4 有收到導航資料，仍須核對車端紀錄。
+Android 和 comma 須互通。在 App 的連線設定填實際 comma 位址，確認即時車況資料持續更新。「Navi v2」可用來查看 App 的引導處理狀態。停車後核對 comma 上的轉彎和距離，再依需求設定道路速限、轉彎減速或 HUD。見[官方設定建議](CARROT_SETTINGS_zh-TW.md)。
 
 在分區一下面的「即時診斷」按「報告」，可分享當下診斷。要記錄問題發生前後的事件，在報告選單按「開始記錄」，重現後用「匯出報告與事件 ZIP」。公開前請檢查位置、路線及連線位址。
 
@@ -59,7 +59,7 @@ Carrot Bridge 內建「Amap2Tesla 僅投神盾」。準備神盾和投屏授權�
 3. 在接收端瀏覽器輸入 App 顯示的完整投屏網址與埠號。
 4. 想恢復 Carrot Bridge 分區一的本機投屏時，先關掉瀏覽器投屏，再關閉「Amap2Tesla 僅投神盾」。
 
-這是 Carrot Bridge 內建模式。獨立版特投屏也能在 Android 端用自訂投屏選擇神盾。你的車機瀏覽器和神盾虛擬螢幕相容性要以實機畫面確認。瀏覽器顯示和 C4 路況資料各用自己的流程。[特投屏下載與說明](https://github.com/jixiexiaoge/Map2Tesla)
+這是 Carrot Bridge 內建模式。獨立版特投屏也能在 Android 端用自訂投屏選擇神盾。你的車機瀏覽器和神盾虛擬螢幕相容性要以實機畫面確認。瀏覽器顯示和 comma 路況資料各用自己的流程。[特投屏下載與說明](https://github.com/jixiexiaoge/Map2Tesla)
 
 ## 5. 常見問題
 

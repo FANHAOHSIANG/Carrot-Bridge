@@ -4,7 +4,7 @@
 
 ## 已確認問題
 
-Google companion 傳回當前步驟剩餘距離 `step.dist` 及下一步與前一步的間距 `next[0].distFromPrev`。wide44 將兩者相加後放入 `guidance_next.distance_m`；下列固定 SHA 的 C4 receiver 又在 `_update_tbt()` 相加，造成重複加上當前距離。
+Google companion 傳回當前步驟剩餘距離 `step.dist` 及下一步與前一步的間距 `next[0].distFromPrev`。wide44 將兩者相加後放入 `guidance_next.distance_m`；下列固定 SHA 的 comma receiver 又在 `_update_tbt()` 相加，造成重複加上當前距離。
 
 | Receiver | 固定提交 |
 | --- | --- |
@@ -22,7 +22,7 @@ Google companion 傳回當前步驟剩餘距離 `step.dist` 及下一步與前�
 - `tests/GoogleBridgeChecks.java`：38 項映射、過期、session、route、停止、模擬、未知方向及零間距檢查。
 - 歷史 wide44 的 32 項原始檢查獨立通過，沒有修改歷史預期掩蓋差異。
 - `tests/ContractFixture.java` 輸出實際編譯 mapper 的 JSON，沒有在 Python 重新實作 mapper。
-- `tests/test_receiver_contract.py` 驗證 Git blob SHA 後載入完整 receiver、cereal、control 來源；原樣以 AST 擷取 carrot_serv 的兩個實際方法，執行 21 項合約斷言。沒有啟動 C4、socket server 或車輛控制回圈。
+- `tests/test_receiver_contract.py` 驗證 Git blob SHA 後載入完整 receiver、cereal、control 來源；原樣以 AST 擷取 carrot_serv 的兩個實際方法，執行 21 項合約斷言。沒有啟動 comma、socket server 或車輛控制回圈。
 
 ```sh
 javac -cp /path/to/json.jar -d /tmp/google-bridge-tests \

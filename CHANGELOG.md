@@ -1,10 +1,16 @@
-# 2026-11-15 — 功能手冊與 C4 測試安裝入口
+# 2026-11-15 — 外接 HUD、裝置支援與設定指南
+
+- 標示 App 支援搭配相容 Carrot 的 C3、C3X 和 comma four，文件統一使用 comma。測試安裝入口限 comma four。
+- 說明 USB 直連和 Mac Jetlink 的 HUD 畫面、個別地圖資料、號誌與測速提醒。
+- 增加官方 Carrot 的 HUD、ATC、導航減速、道路速限及彎速設定建議與設定位置。
+
+# 2026-11-15 — 功能手冊與 comma four 測試安裝入口
 
 - 儲存庫改名 Carrot-Bridge，更新首頁與主要操作文件連結。
 - 說明四個地圖選項、神盾、道路速限、投屏、地址、診斷與匯出。
 - 依固定提交比較官方 Carrot 與 1104 測試分支，列出操作、限制與待驗證項目。
-- 提供指向 openpilot-carrot 正確分支的 C4 實驗安裝入口 `https://da.gd/cb-test`、備用長網址、來源／校驗與測試提醒；短網址下載與檔案雜湊核對通過，尚未實機安裝或開機驗證。
-- 本次未修改 Android APK 或 C4 控制程式；目前 APK 仍是 wide.70。
+- 提供指向 openpilot-carrot 正確分支的 comma 實驗安裝入口 `https://da.gd/cb-test`、備用長網址、來源／校驗與測試提醒；短網址下載與檔案雜湊核對通過，尚未實機安裝或開機驗證。
+- 本次未修改 Android APK 或 comma 控制程式；目前 APK 仍是 wide.70。
 
 # wide.70 — 分區與版本顯示
 
@@ -18,8 +24,8 @@
 - C 版投屏取消頂部標題條，將左右投屏選項和面板收合放在右下。
 - Google NOO 搜尋與地址結果改版。結束導航時清除目前引導並回到搜尋頁。
 - 神盾投屏的固定／移動測速可觸發 App 四邊紅光，支援事件匯出。
-- C4 道路速限優先送經道路與方向配對的 TDX，其次為 OSM。衝突或無法確認時撤銷。
-- 車端的 `ROUTE` 短折線誤減速另外推送至 C4 測試分支。
+- comma 道路速限優先送經道路與方向配對的 TDX，其次為 OSM。衝突或無法確認時撤銷。
+- 車端的 `ROUTE` 短折線誤減速另外推送至 comma 測試分支。
 - [APK 下載與發布說明](https://github.com/FANHAOHSIANG/copilot-Tw/releases/tag/wide.69) · [完整更新、操作及簽署方式](variants/wide69/README.md)
 
 # wide.68 — 原始碼更新
@@ -32,23 +38,23 @@
 
 完成科技執法 GPS／道路／畫面／離線中文語音接線與診斷入口，增加停止、過期及語意變更撤銷。方向未知的同路公告仍明說「取締方向待確認」，不升級為確定行向；附近與條件未知不播。新提醒無車控欄位。
 
-Google mapper 改交付 next gap，修正 C4 雙重累加。配套縮小 Places 欄位、搜尋防抖／session token、錯誤碼及非同步取消。恢復 wide.44 原始 Java、smali 與 Google Gradle 專案；提供可驗 hash 的 build base、signed release restore 與完整教學。
+Google mapper 改交付 next gap，修正 comma 雙重累加。配套縮小 Places 欄位、搜尋防抖／session token、錯誤碼及非同步取消。恢復 wide.44 原始 Java、smali 與 Google Gradle 專案；提供可驗 hash 的 build base、signed release restore 與完整教學。
 
-67 核心、46 lifecycle、316 繪圖、38 mapper、21 receiver 合約檢查通過；Google CI 的 8 JUnit、正常 release lint／assembleRelease 成功。主 APK 同憑證／16 KiB／scope／內部引用核對通過。實際手機、Google 授權與帳單、C4 接收尚待裝置驗收。詳見 [wide.46](variants/wide46/README.md)、[Google 教學](docs/GOOGLE_SDK_zh-TW.md)、[裝置驗收](docs/DEVICE_ACCEPTANCE_zh-TW.md)。
+67 核心、46 lifecycle、316 繪圖、38 mapper、21 receiver 合約檢查通過；Google CI 的 8 JUnit、正常 release lint／assembleRelease 成功。主 APK 同憑證／16 KiB／scope／內部引用核對通過。實際手機、Google 授權與帳單、comma 接收尚待裝置驗收。詳見 [wide.46](variants/wide46/README.md)、[Google 教學](docs/GOOGLE_SDK_zh-TW.md)、[裝置驗收](docs/DEVICE_ACCEPTANCE_zh-TW.md)。
 
 # wide.45-amap-link — 開發分支，2026-11-12
 
 手機高德一般版新增本機 Link 輸入，不需高德開發者 Key，使用正常 App 身分認證與訂閱。已確認的目前轉向、路口距離、道路、停止與抵達事件接入原 Navi v2；車機高德廣播與台灣資料合併保留。未知路線、限速、測速與轉向種類不推測。
 
-加入明文／AES-GCM／分段／FD 傳輸邊界、來源與 binding 世代隔離，以及以原始接收時間計算的 3 秒引導有效期。383 個離線斷言通過，APK 已編譯並核對原簽章及對齊。交付版建立於既有 wide.44，保留其 Google 與離線道路功能；手機 17.02.2 真實授權與 C4 收件仍待裝置確認。見 [完整說明](variants/amap-link1/README.md)。
+加入明文／AES-GCM／分段／FD 傳輸邊界、來源與 binding 世代隔離，以及以原始接收時間計算的 3 秒引導有效期。383 個離線斷言通過，APK 已編譯並核對原簽章及對齊。交付版建立於既有 wide.44，保留其 Google 與離線道路功能；手機 17.02.2 真實授權與 comma 收件仍待裝置確認。見 [完整說明](variants/amap-link1/README.md)。
 
 # wide.42 — 2026-11-12
 
-測速提醒改為多候選獨立追蹤、短暫保留有效軌跡、低速延長觀察視窗；加入候選與語音診斷。63 項程式檢查通過，17 情境比較及 539 組道路回放未新增異常；既有 17 組無目標、9 組反向標記仍待查。未更改 C4 控制或高德預調速，實機驗證未完成。
+測速提醒改為多候選獨立追蹤、短暫保留有效軌跡、低速延長觀察視窗；加入候選與語音診斷。63 項程式檢查通過，17 情境比較及 539 組道路回放未新增異常；既有 17 組無目標、9 組反向標記仍待查。未更改 comma 控制或高德預調速，實機驗證未完成。
 
 # wide.41
 
-修正提醒背景時差、候選超量重置、空結果覆蓋與道路速限保留；恢復獨立同向接近候選提示。新增高德一般版輸入診斷，尚未證實實機 C4 接收。詳見 variants/wide41/README.md。
+修正提醒背景時差、候選超量重置、空結果覆蓋與道路速限保留；恢復獨立同向接近候選提示。新增高德一般版輸入診斷，尚未證實實機 comma 接收。詳見 variants/wide41/README.md。
 
 # 更新紀錄
 
@@ -56,7 +62,7 @@ Google mapper 改交付 next gap，修正 C4 雙重累加。配套縮小 Places 
 
 - 提醒專用連續座標補足方向／速度缺值。
 - 高架與平面模糊時允許同向候選提醒；標示點位道路層級，加入兩段語音。
-- 不放寬C4控制，不新增點位配對。30項離線測試通過，實機待驗證。
+- 不放寬 comma 控制，不新增點位配對。30項離線測試通過，實機待驗證。
 
 
 ## wide.39 · 2026-11-11
@@ -69,7 +75,7 @@ Google mapper 改交付 next gap，修正 C4 雙重累加。配套縮小 Places 
 
 ## wide.37
 
-國一北上提醒道路修正；新增提醒配對，完成1856點盤點、539組方向合成回放。語音門檻1公里，沒有將所有點或新增提醒點直接加入C4控制。詳見 variants/wide37。
+國一北上提醒道路修正；新增提醒配對，完成1856點盤點、539組方向合成回放。語音門檻1公里，沒有將所有點或新增提醒點直接加入 comma 控制。詳見 variants/wide37。
 
 ## wide.31–wide.36
 

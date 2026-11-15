@@ -8,7 +8,7 @@
 - `data/enforcement/tw_enforcement.geojson`：有座標的獨立圖層。
 - `data/enforcement/audit.json`：22 縣市覆蓋、下載/解析狀態、未能可靠解析的 PDF 行。
 - `tools/enforcement/`：下載、保留上次快照、CSV/JSON/PDF 解析、資產打包與測試。
-- `variants/enforcement/`：Android Java 查詢讀取器與測試。這是最初資料層。後續 wide.46 已由 `variants/enforcement-alert` 與 `variants/wide46` 接上分層畫面／語音，並保留這個原始查詢器；不輸出新的 C4 車控欄位。
+- `variants/enforcement/`：Android Java 查詢讀取器與測試。這是最初資料層。後續 wide.46 已由 `variants/enforcement-alert` 與 `variants/wide46` 接上分層畫面／語音，並保留這個原始查詢器；不輸出新的 comma 車控欄位。
 
 ## 核對與限制
 

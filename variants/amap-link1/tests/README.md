@@ -58,7 +58,7 @@ threshold, or evidence of safe automated vehicle behavior.
 
 A host pass does not prove that the installed phone version grants Link access,
 that a particular Android device delivers the Binder/FD callbacks, that its
-background-process policy permits operation, or that C4 receives or acts on an
+background-process policy permits operation, or that comma receives or acts on an
 instruction. Real service authorization, descriptor lifecycle, phone-version
-compatibility and C4 receipt still require device verification. The tests do not
+compatibility and comma receipt still require device verification. The tests do not
 manufacture speed limits, cameras, route geometry or successful authentication.
