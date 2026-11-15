@@ -3,6 +3,7 @@
 - 標示 App 支援搭配相容 Carrot 的 C3、C3X 和 comma four，文件統一使用 comma。測試安裝入口限 comma four。
 - 說明 USB 直連和 Mac Jetlink 的 HUD 畫面、個別地圖資料、號誌與測速提醒。
 - 增加官方 Carrot 的 HUD、ATC、導航減速、道路速限及彎速設定建議與設定位置。
+- 比較高德車機版、高德一般版與 Google 導航 NOO 可提供的引導、路線與減速資料。
 
 # 2026-11-15 — 功能手冊與 comma four 測試安裝入口
 

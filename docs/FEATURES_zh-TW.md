@@ -55,7 +55,27 @@ App 在 Android 顯示地圖與其他 App，整理支援來源的導航資料，
 
 此選項用內建 SDK，不是從另一個 Google Maps App 擷取。名稱中的 NOO 表示導航整合用途，不保證車輛能自主通過路口。Google 速限、相機及號誌不在此版保證資料範圍。
 
-### 神盾測速照相
+## 導航輔助（NOO）比較
+
+Carrot Bridge 使用 **導航輔助（NOO，Navigate on Openpilot）** 作為名稱。**NOA（Navigate on Autopilot）** 是其他系統使用的名稱，實際功能依系統而異。在 Carrot Bridge 選導航來源，在 Carrot 依需要設定 ATC 與彎速。〔[openpilot 名稱來源](https://blog.comma.ai/094release/) · [CarrotPilot 的 NOO／ATC 說明](https://g4iwnl.gitbook.io/carrotpilot/basic-settings/faq) · [NOA 名稱範例](https://www.tesla.com/ownersmanual/modely/en_pr/Owners_Manual.pdf)〕
+
+| 導航來源 | 轉彎引導與 ATC | 路線彎速 | 道路速限、測速與號誌 |
+| --- | --- | --- | --- |
+| **高德車機版** | 以車機廣播收到的轉彎種類與距離為準。有效且可辨識的引導可供畫面與 ATC 使用。 | 看該版本是否供應有效路線。僅有路口資料時可做轉彎減速，路線曲率需要路線點。 | 有效的道路速限或測速事件可送給 comma。號誌依來源及 HUD 版本顯示。 |
+| **高德一般版** | Link 授權和資料有效時，送當前轉彎、距離和路名。有相符的選定路線與下一步時，再送下一轉彎。 | 送出的是當前選定的高德路線。這次核對的官方接收上限為 256 點，個人測試分支最多接收 4,096 點。仍需核對實機路線與定位配對。 | 手機版測速與原生道路速限欄位未確認。可另外開啟 TDX／OSM 道路速限。手機號誌倒數需對應 App 版本。 |
+| **Google 導航 NOO** | 內建 SDK 送目前、下一個有效轉彎、距離與路名。已映射的左／右轉、分岔、匝道等引導可交給 Carrot 判讀。 | 路線版本與定位吻合時送出前方路線區段，可供相容 Carrot 計算彎速。 | 此整合目前提供引導與路線。道路速限可另用 TDX／OSM，Google 測速及號誌不列入目前支援。 |
+
+「Google 地圖（僅投屏）」適合看 Google Maps 畫面與聽語音。需要把 Google 的路口資料送到 comma 時，請選「Google 導航 NOO」。表格說明的是 wide.70 可交付的資料與已核對的 Carrot 接收能力。〔[高德 Link 路線驗證](../variants/wide56/SCHEMA.md) · [Google 資料轉換](../variants/google-bridge46/src/WideGoogleAdapter.java) · [官方與測試分支版本](C4_BRANCHES_zh-TW.md#核對版本)〕
+
+### 導航引導如何參與駕駛輔助
+
+- **轉彎減速**使用轉彎種類與距離。確認引導有效且已有可用的縱向控制後，可用 `AutoTurnControl=3` 單獨觀察轉彎速度，`2` 會同時保留 ATC 的轉向類型。畫面上的 `atc`／`atc2` 可用來辨認採用的來源。
+- **路線彎速**使用路線、定位與分支的有效條件。官方已有 `route` 候選，個人測試分支加強長路線接收、道路配對和出彎處理。測試分支的離線 OSM 可補充彎速預覽。
+- **方向燈、轉向和變道**各自需要符合車型、線束、控制狀態、模型和設定條件。收到右轉提示時，可以先在 HUD 確認箭頭和距離。車外方向燈和實際轉向須分開核對。
+
+第一次連線可從目前能穩定收到資料的來源開始。只看引導先維持 `AutoTurnControl=0`。確認轉彎與距離正確後，再依需求逐項加入減速功能。〔[官方設定建議](CARROT_SETTINGS_zh-TW.md#第一次用依目標選一種) · [官方車道變換條件](https://github.com/ajouatom/openpilot/blob/baab16bb9666eb51a5047aaa586e4517c6155a40/docs/user/en/lane-change.md)〕
+
+## 神盾測速照相
 
 **用途：** 在導航旁顯示神盾提醒，辨識成功時增加 App 四邊紅光。
 
