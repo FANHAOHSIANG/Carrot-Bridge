@@ -25,10 +25,16 @@
 在 C4 的 **Custom software／自訂軟體 URL** 畫面輸入：
 
 ```text
+https://da.gd/cb-test
+```
+
+短網址只轉向本儲存庫的安裝檔。已使用與 C4 設定程式相同的請求標頭核對最終檔案與 SHA-256，確認直接下載正確安裝檔；這項下載驗證不代表實機安裝通過。第三方短網址服務若不可用，改輸入備用長網址：
+
+```text
 https://raw.githubusercontent.com/FANHAOHSIANG/Carrot-Bridge/main/install/c4-test
 ```
 
-[直接安裝檔](https://raw.githubusercontent.com/FANHAOHSIANG/Carrot-Bridge/main/install/c4-test) · [SHA-256](../install/c4-test.sha256) · [安裝檔來源與核對紀錄](../install/c4-test.json)
+[直接安裝檔](https://raw.githubusercontent.com/FANHAOHSIANG/Carrot-Bridge/main/install/c4-test) · [SHA-256](../install/c4-test.sha256) · [安裝檔來源](../install/c4-test.json) · [短網址下載核對紀錄](../install/download-check.json)
 
 用一般電腦瀏覽器打開會下載 ELF 安裝檔，不是說明網頁，不要在電腦執行。C4 的設定程式會下載它再啟動安裝。
 

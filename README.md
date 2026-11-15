@@ -75,6 +75,16 @@
 
 **官方也能使用有效導航資料，測試分支主要增加配套與修正。** 接到轉彎提示不等於車輛一定轉彎；畫面方向指示也不等於車外方向燈能點亮。[設定、硬體條件與驗證層級](docs/C4_BRANCHES_zh-TW.md)
 
+## C4 測試分支安裝短網址
+
+在 **comma four 的 Custom software／自訂軟體 URL** 畫面輸入：
+
+```text
+https://da.gd/cb-test
+```
+
+這個入口安裝 `FANHAOHSIANG/openpilot-carrot` 的 `test/carrot-wip-upstream-20261104` 最新內容。**這是測試分支，請小心使用。** 短網址已確認可下載正確的 C4 安裝檔；尚未完成 C4 實機安裝、首次開機及車輛驗收。請先閱讀 [完整安裝步驟、備用長網址與回復方式](docs/C4_TEST_INSTALL_zh-TW.md)。此入口不是 Android APK，也不作 C3／C3X 通用入口。
+
 ## 第一次使用
 
 1. 停車後安裝 APK、目標地圖及投屏工具；啟動 Stellar／Shizuku，再回 App 授權。

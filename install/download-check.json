@@ -1,0 +1,13 @@
+{
+  "checked_at_utc": "2026-11-15T09:43:21.329781+00:00",
+  "short_url": "https://da.gd/cb-test",
+  "destination": "https://raw.githubusercontent.com/FANHAOHSIANG/Carrot-Bridge/main/install/c4-test",
+  "final_url": "https://raw.githubusercontent.com/FANHAOHSIANG/Carrot-Bridge/main/install/c4-test",
+  "http_status": 200,
+  "size_bytes": 2051392,
+  "sha256": "0f4d978aea9d76a77b611ec388ddd92e525d8c0866fb77ee30fcde0ac98b956c",
+  "download_matches_published_installer": true,
+  "device_headers": "comma four / MICI, AGNOSSetup-19.8",
+  "hardware_installation_tested": false,
+  "first_boot_tested": false
+}
