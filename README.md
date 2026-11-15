@@ -9,9 +9,15 @@
 > [!WARNING]
 > `test/carrot-wip-upstream-20261104` 是持續變動的個人測試分支，請小心使用。可能發生非預期減速、路線偏差、功能失效或退出控制。請停車設定，先確認車型與線束支援、保留回復方法，駕駛全程注意道路並隨時接管。離線測試通過不等於實車驗收，不能依賴 App 或測試分支自動完成路口轉彎。
 
+## wide.74 HUD 測試版
+
+**[下載 wide.74 測試 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.74)** · **[功能示意圖、新竹市地圖選擇、搭配分支與 Carrot Web 設定](docs/WIDE74_HUD_zh-TW.md)**
+
+wide.74 新增兩版高德的 HUD 地圖影像，並包含高德車機版測速紅光與分區一全幅。建議先停車驗收。
+
 ## 下載與需求
 
-目前發布版 **wide.70**，需 **Android 12 以上**。投屏時在同一台 Android 安裝目標 App，並啟動 **Stellar 或 Shizuku 擇一**；Stellar 須開啟 Shizuku 相容層。
+目前正式發布版 **wide.70**，需 **Android 12 以上**。投屏時在同一台 Android 安裝目標 App，並啟動 **Stellar 或 Shizuku 擇一**；Stellar 須開啟 Shizuku 相容層。
 
 | 項目 | 下載／教學 | 什麼時候需要 |
 | --- | --- | --- |
