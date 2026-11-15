@@ -1,10 +1,6 @@
 name: Publish verified wide.42 downloads
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'release/wide42/**'
-      - '.github/workflows/release-wide42.yml'
+  # This historical release has already been published.
   workflow_dispatch:
 permissions:
   contents: write

@@ -31,7 +31,6 @@ The output directory must be new or empty. The runner downloads and verifies its
 ## APK builds and release publication
 
 - `google-companion-build.yml` builds and tests the actual standalone Android project in `variants/google-navdash`, then retains an **unsigned** APK for the controlled signing process.
-- `release-wide46.yml` publishes the reviewed wide.46 release through its dedicated release process. Host checks do not assemble the patched CoPilot APK, sign it or publish it.
-- The retained earlier `release-wide39.yml` through `release-wide42.yml` cover their corresponding historical releases.
+- The historical wide.39, wide.40, wide.41, wide.42 and wide.46 release workflows run only when manually dispatched. Changes to documentation or other files on `main` run the regular host checks. Each publisher still verifies its inputs and refuses to overwrite an existing release.
 
 The old `gradle-publish.yml` starter template has been removed. It attempted `./gradlew build` and `./gradlew publish` at the repository root, where no Gradle wrapper or package-publication project exists. The actual Google companion build and wide.46 release workflows replace that inapplicable template.
