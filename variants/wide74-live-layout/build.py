@@ -4,6 +4,7 @@ import hashlib
 from pathlib import Path
 import re
 import shutil
+import struct
 import subprocess
 import tempfile
 from zipfile import ZipFile
@@ -23,6 +24,16 @@ def run(*args):
     subprocess.run(args, check=True)
 
 
+def release_manifest(original):
+    manifest = original
+    for old, new in (("wide.74".encode("utf-16le"), "wide.75".encode("utf-16le")),
+                     (struct.pack("<I", 26110786), struct.pack("<I", 26110787))):
+        if manifest.count(old) != 1:
+            raise ValueError("Unexpected wide.74 manifest version")
+        manifest = manifest.replace(old, new)
+    return manifest
+
+
 def build(args, work):
     dalvik = ("java", "-cp", args.apktool, HERE.parent / "wide69/Dalvik.java")
     paths = {name: (work / name, work / (name + "-decoded"), work / ("new-" + name))
@@ -40,7 +51,10 @@ def build(args, work):
             for item in base.infolist():
                 if not SIGNATURE.fullmatch(item.filename):
                     data = paths.get(item.filename)
-                    apk.writestr(item, data[2].read_bytes() if data else base.read(item))
+                    payload = data[2].read_bytes() if data else base.read(item)
+                    if item.filename == "AndroidManifest.xml":
+                        payload = release_manifest(payload)
+                    apk.writestr(item, payload)
 
     aligned = work / "aligned.apk"
     run(args.zipalign, "-P", "16", "-f", "4", unaligned, aligned)
@@ -50,7 +64,7 @@ def build(args, work):
         if set(apk.namelist()) != expected or apk.testzip():
             raise ValueError("APK inventory or ZIP integrity mismatch")
         changed = {name for name in expected if apk.read(name) != base.read(name)}
-        if changed != paths.keys():
+        if changed != set(paths) | {"AndroidManifest.xml"}:
             raise ValueError(f"Unexpected APK payload changes: {changed}")
     with args.output.open("xb") as target, aligned.open("rb") as source:
         shutil.copyfileobj(source, target)
