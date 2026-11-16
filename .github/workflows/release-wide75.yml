@@ -1,0 +1,44 @@
+name: Publish signed Carrot Bridge wide.75
+on:
+  push:
+    branches: [release/wide75]
+    paths: ['release/wide75/**', '.github/workflows/release-wide75.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: release-wide75
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.ref == 'refs/heads/release/wide75'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Restore and verify the signed APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release download wide.74 --repo "$GITHUB_REPOSITORY" --pattern Carrot-Bridge-wide.74.apk --dir "$RUNNER_TEMP"
+          echo 'e838258c1eb857202d24ee05ea1a8b392615d428416c4506e8f4cbc969c44a2d  Carrot-Bridge-wide.74.apk' | (cd "$RUNNER_TEMP" && sha256sum -c)
+          python3 -m venv "$RUNNER_TEMP/wide75-venv"
+          "$RUNNER_TEMP/wide75-venv/bin/pip" install bsdiff4==1.2.6
+          cat release/wide75/chunks/*.bsdiff > "$RUNNER_TEMP/wide75.bsdiff"
+          "$RUNNER_TEMP/wide75-venv/bin/bspatch4" "$RUNNER_TEMP/Carrot-Bridge-wide.74.apk" "$RUNNER_TEMP/Carrot-Bridge-wide.75.apk" "$RUNNER_TEMP/wide75.bsdiff"
+          (cd "$RUNNER_TEMP" && sha256sum -c "$GITHUB_WORKSPACE/release/wide75/SHA256SUMS.txt")
+      - name: Publish the verified APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view wide.75 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'wide.75 already exists'
+            exit 1
+          fi
+          gh release create wide.75 "$RUNNER_TEMP/Carrot-Bridge-wide.75.apk" release/wide75/SHA256SUMS.txt \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Carrot Bridge wide.75" \
+            --notes-file release/wide75/NOTES.md --prerelease --latest=false
