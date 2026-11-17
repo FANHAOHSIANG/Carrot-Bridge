@@ -4,16 +4,16 @@
 
 整合高德車機版、高德一般版、Google 地圖投屏與內建 Google 導航 NOO。可單獨當分割畫面使用，也可連接 **C3、C3X 或 comma four**，提供轉彎引導、路線及已確認的道路速限。comma 須使用支援 Carrot Navi v2 的 Carrot 版本。車輛是否採用資料，取決於分支、設定、模型及車型支援。
 
-**[下載最新版 wide.75 測試 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.75/Carrot-Bridge-wide.75.apk)** · **[完整功能手冊](docs/FEATURES_zh-TW.md)** · **[安裝與操作](docs/INSTALL_zh-TW.md)** · **[官方設定建議](docs/CARROT_SETTINGS_zh-TW.md)** · **[外接 HUD](docs/HUD_zh-TW.md)** · **[分支比較](docs/C4_BRANCHES_zh-TW.md)** · **[測試分支安裝](docs/C4_TEST_INSTALL_zh-TW.md)**
+**[下載最新版 wide.76 測試 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.76/Carrot-Bridge-wide.76.apk)** · **[完整功能手冊](docs/FEATURES_zh-TW.md)** · **[安裝與操作](docs/INSTALL_zh-TW.md)** · **[官方設定建議](docs/CARROT_SETTINGS_zh-TW.md)** · **[外接 HUD](docs/HUD_zh-TW.md)** · **[分支比較](docs/C4_BRANCHES_zh-TW.md)** · **[測試分支安裝](docs/C4_TEST_INSTALL_zh-TW.md)**
 
 > [!WARNING]
 > `test/carrot-wip-upstream-20261104` 是持續變動的個人測試分支，請小心使用。可能發生非預期減速、路線偏差、功能失效或退出控制。請停車設定，先確認車型與線束支援、保留回復方法，駕駛全程注意道路並隨時接管。離線測試通過不等於實車驗收，不能依賴 App 或測試分支自動完成路口轉彎。
 
-## wide.75 測試版
+## wide.76 測試版
 
-**[wide.75 發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.75)** · **[功能示意圖、各地圖可顯示的效果、搭配分支與 Carrot Web 設定](docs/WIDE74_HUD_zh-TW.md)**
+**[wide.76 發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.76)** · **[功能示意圖、各地圖可顯示的效果、搭配分支與 Carrot Web 設定](docs/WIDE74_HUD_zh-TW.md)**
 
-wide.75 讓分區二可即時關閉或顯示，讓分區一沿用現有投屏。新版承接 wide.74 的兩版高德 HUD 地圖影像與高德車機版測速紅光。APK 沿用原簽章，可覆蓋 wide.74，投屏切換仍待車機驗收。
+wide.76 修正高德車機版一般導航更新中的測速資料沒有觸發 Android 四周紅光：現在與獨立測速廣播共用已驗證的測速資料。保留 wide.75 即時關閉／顯示分區二及原投屏功能，APK 沿用原簽章，可覆蓋 wide.75。16 項邏輯檢查、兩種入口接線、APK 結構與憑證核對已通過，實車紅光仍待驗收；測試版請小心使用。[修正與驗證說明](variants/wide76/README.md)
 
 ## 下載與需求
 
