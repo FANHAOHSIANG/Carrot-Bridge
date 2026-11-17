@@ -1,6 +1,6 @@
 # wide.78：恢復高德車機版原生預調／智慧調速（測試版）
 
-> 發布狀態：程式碼及 comma 測試分支已推送；wide.78 APK 尚未上傳。打包環境在原簽章完成後中斷，請繼續使用 wide.77 正式版，待測試版下載發布後再進行下列安裝步驟。
+> 發布狀態：本次修正已包含在 [wide.79 三導航預調測試版](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.79)，請安裝 wide.79 並搭配更新後的 comma。wide.78 未獨立發布。
 
 基於使用者驗收的 wide.77；保留日夜切換、分區重啟與測速紅光修正。wide.77 仍是正式 Latest，本版需要實車驗證，請小心使用。
 
