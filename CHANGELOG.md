@@ -1,3 +1,11 @@
+# wide.77 — 2026-11-17，正式發布
+
+- 使用者回報使用正常並確認轉為正式版，設為 GitHub Latest。
+- 沿用已驗收的原 APK、版本號與簽章，沒有重建或替換下載附件；已安裝 wide.77 不需重裝。
+- 日夜模式切換及輸入硬體設定變更不再造成主畫面預設重建；重選分區二同一 App 不重建投屏。
+- 保留 wide.75 分區二開關修正及 wide.76 高德測速紅光資料接線修正。
+- [正式版下載與發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.77) · [驗證與其他重啟因素](variants/wide77/README.md)
+
 # 2026-11-15 — 外接 HUD、裝置支援與設定指南
 
 - 標示 App 支援搭配相容 Carrot 的 C3、C3X 和 comma four，文件統一使用 comma。測試安裝入口限 comma four。

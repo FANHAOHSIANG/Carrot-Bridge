@@ -4,24 +4,24 @@
 
 整合高德車機版、高德一般版、Google 地圖投屏與內建 Google 導航 NOO。可單獨當分割畫面使用，也可連接 **C3、C3X 或 comma four**，提供轉彎引導、路線及已確認的道路速限。comma 須使用支援 Carrot Navi v2 的 Carrot 版本。車輛是否採用資料，取決於分支、設定、模型及車型支援。
 
-**[下載最新版 wide.77 測試 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.77/Carrot-Bridge-wide.77.apk)** · **[完整功能手冊](docs/FEATURES_zh-TW.md)** · **[安裝與操作](docs/INSTALL_zh-TW.md)** · **[官方設定建議](docs/CARROT_SETTINGS_zh-TW.md)** · **[外接 HUD](docs/HUD_zh-TW.md)** · **[分支比較](docs/C4_BRANCHES_zh-TW.md)** · **[測試分支安裝](docs/C4_TEST_INSTALL_zh-TW.md)**
+**[下載最新版 wide.77 正式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.77/Carrot-Bridge-wide.77.apk)** · **[完整功能手冊](docs/FEATURES_zh-TW.md)** · **[安裝與操作](docs/INSTALL_zh-TW.md)** · **[官方設定建議](docs/CARROT_SETTINGS_zh-TW.md)** · **[外接 HUD](docs/HUD_zh-TW.md)** · **[分支比較](docs/C4_BRANCHES_zh-TW.md)** · **[測試分支安裝](docs/C4_TEST_INSTALL_zh-TW.md)**
 
 > [!WARNING]
 > `test/carrot-wip-upstream-20261104` 是持續變動的個人測試分支，請小心使用。可能發生非預期減速、路線偏差、功能失效或退出控制。請停車設定，先確認車型與線束支援、保留回復方法，駕駛全程注意道路並隨時接管。離線測試通過不等於實車驗收，不能依賴 App 或測試分支自動完成路口轉彎。
 
-## wide.77 測試版
+## wide.77 正式版
 
 **[wide.77 發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.77)** · **[功能示意圖、各地圖可顯示的效果、搭配分支與 Carrot Web 設定](docs/WIDE74_HUD_zh-TW.md)**
 
-wide.77 補上主畫面的日夜模式與輸入硬體設定變更處理，避免車機進出隧道切換夜間模式時，Android 預設重建 Carrot Bridge 並拆掉兩個投屏連線；分區二重選同一個 App 也不再重建投屏。保留 wide.75 分區二開關與 wide.76 高德測速紅光修正，原簽章可覆蓋更新。Manifest、DEX、APK 簽章與增量還原核對通過，**車機日夜切換仍待實測；測試版請小心使用**。[修正、其他重啟因素與測試方式](variants/wide77/README.md)
+wide.77 補上主畫面的日夜模式與輸入硬體設定變更處理，避免車機進出隧道切換夜間模式時，Android 預設重建 Carrot Bridge 並拆掉兩個投屏連線；分區二重選同一個 App 也不再重建投屏。保留 wide.75 分區二開關與 wide.76 高德測速紅光修正，原簽章可覆蓋更新。Manifest、DEX、APK 簽章與增量還原核對通過，**使用者於 2026-11-17 回報使用正常並確認轉為正式版；沿用已驗收的相同 APK，已安裝 wide.77 不必重裝**。[修正、其他重啟因素與測試方式](variants/wide77/README.md)
 
 ## 下載與需求
 
-目前正式發布版 **wide.70**，需 **Android 12 以上**。投屏時在同一台 Android 安裝目標 App，並啟動 **Stellar 或 Shizuku 擇一**；Stellar 須開啟 Shizuku 相容層。
+目前正式發布版 **wide.77**，需 **Android 12 以上**。投屏時在同一台 Android 安裝目標 App，並啟動 **Stellar 或 Shizuku 擇一**；Stellar 須開啟 Shizuku 相容層。
 
 | 項目 | 下載／教學 | 什麼時候需要 |
 | --- | --- | --- |
-| **Carrot Bridge wide.70** | **[主程式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.70/Carrot-Bridge-wide.70.apk)** | 所有功能入口；同簽章舊版可覆蓋更新 |
+| **Carrot Bridge wide.77** | **[主程式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.77/Carrot-Bridge-wide.77.apk)** | 所有功能入口；同簽章舊版可覆蓋更新 |
 | Stellar 1.1 | [官方 APK](https://github.com/roro2239/Stellar/releases/download/v1.1%28101000%29/stellar-v1.1-release.apk) | 投屏授權工具，與 Shizuku 擇一 |
 | Shizuku 13.6.0 | [官方 APK](https://github.com/RikkaApps/Shizuku/releases/download/v13.6.0/shizuku-v13.6.0.r1086.2650830c-release.apk) | 投屏授權工具，與 Stellar 擇一 |
 | 高德車機版／一般版 | [車機版](https://www.amapauto.com/) · [一般版](https://mobile.amap.com/cn/download.html) | 選用對應高德來源時 |
@@ -117,6 +117,6 @@ https://da.gd/cb-test
 4. 要連 comma，讓兩端網路互通並設定 comma 位址。依序核對 App 引導、Navi v2 與 comma 接收。畫面和減速分別確認，參考[官方設定建議](docs/CARROT_SETTINGS_zh-TW.md)。
 5. 要試個人分支，先閱讀[測試提醒、安裝入口與回復方式](docs/C4_TEST_INSTALL_zh-TW.md)。只用投屏可直接在 Android 操作。
 
-[更新紀錄](CHANGELOG.md) · [wide.70 驗證範圍](variants/wide70/README.md) · [開發與重建](docs/BUILD_zh-TW.md) · [資料來源與授權](docs/DATA_SOURCES_zh-TW.md)
+[更新紀錄](CHANGELOG.md) · [wide.77 驗證範圍](variants/wide77/README.md) · [開發與重建](docs/BUILD_zh-TW.md) · [資料來源與授權](docs/DATA_SOURCES_zh-TW.md)
 
 上游專案、第三方 App 與圖資各自沿用原有授權。[Stellar 與 Shizuku 授權](third_party/projection/README.md#版本與校驗)
