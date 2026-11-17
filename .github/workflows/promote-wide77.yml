@@ -1,0 +1,33 @@
+name: Promote verified wide.77 to stable
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/promote-wide77.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: promote-wide77
+  cancel-in-progress: false
+jobs:
+  promote:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Promote the existing verified release without changing assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/wide.77" > "$RUNNER_TEMP/before.json"
+          jq -e '.id == 448222364 and .draft == false and ([.assets[] | select(.name == "Carrot-Bridge-wide.77.apk" and .id == 757861696 and .digest == "sha256:779c550c05ce5b59193f1c1b1a498e8f9b40f5d1eb27789514ab7ba14e51bc82")] | length == 1)' "$RUNNER_TEMP/before.json"
+          gh release edit wide.77 --repo "$GITHUB_REPOSITORY" --prerelease=false --latest --notes-file docs/releases/wide77.md
+          gh api "repos/$GITHUB_REPOSITORY/releases/latest" > "$RUNNER_TEMP/after.json"
+          jq -e '.id == 448222364 and .tag_name == "wide.77" and .prerelease == false and .draft == false' "$RUNNER_TEMP/after.json"
+          jq -S '[.assets[] | {id,name,size,digest}] | sort_by(.id)' "$RUNNER_TEMP/before.json" > "$RUNNER_TEMP/assets-before.json"
+          jq -S '[.assets[] | {id,name,size,digest}] | sort_by(.id)' "$RUNNER_TEMP/after.json" > "$RUNNER_TEMP/assets-after.json"
+          diff -u "$RUNNER_TEMP/assets-before.json" "$RUNNER_TEMP/assets-after.json"
