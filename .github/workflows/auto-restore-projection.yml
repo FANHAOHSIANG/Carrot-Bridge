@@ -36,5 +36,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: wide80-unsigned-not-for-installation
-          path: /tmp/Carrot-Bridge-wide.79-unsigned.apk
+          path: /tmp/Carrot-Bridge-wide.80-unsigned.apk
           retention-days: 7
