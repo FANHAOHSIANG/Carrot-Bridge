@@ -1,0 +1,131 @@
+name: Publish Carrot Bridge wide.80 auto-restore test APK
+
+on:
+  push:
+    branches: [feature/auto-restore-last-projection-20261124]
+    paths:
+      - variants/wide80/**
+      - .github/workflows/publish-wide80-test.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wide80-auto-restore-test-release
+  cancel-in-progress: false
+
+jobs:
+  apk:
+    if: github.ref == 'refs/heads/feature/auto-restore-last-projection-20261124'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Download pinned base APK and build dependencies
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/base
+          gh release download wide.77 --pattern Carrot-Bridge-wide.77.apk --dir /tmp/base
+          echo "779c550c05ce5b59193f1c1b1a498e8f9b40f5d1eb27789514ab7ba14e51bc82  /tmp/base/Carrot-Bridge-wide.77.apk" | sha256sum -c -
+          curl --retry 5 --retry-all-errors -fL https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar -o /tmp/apktool.jar
+          curl --retry 5 --retry-all-errors -fL https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar -o /tmp/json.jar
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'build-tools;35.0.0'
+          log-accepted-android-sdk-licenses: 'false'
+      - name: Run regression tests and compile wide.80
+        run: |
+          set -euo pipefail
+          sdkmanager "build-tools;35.0.0"
+          python3 variants/wide80/build.py /tmp/base/Carrot-Bridge-wide.77.apk "$ANDROID_HOME/build-tools/35.0.0" /tmp/apktool.jar /tmp/json.jar /tmp/Carrot-Bridge-wide.80-unsigned.apk
+      - name: Sign APK and check signing identity
+        env:
+          EXISTING_KEY_B64: ${{ secrets.CARROT_BRIDGE_SIGNING_KEYSTORE_B64 }}
+          EXISTING_KEY_ALIAS: ${{ secrets.CARROT_BRIDGE_SIGNING_KEY_ALIAS }}
+          EXISTING_STORE_PASSWORD: ${{ secrets.CARROT_BRIDGE_SIGNING_STORE_PASSWORD }}
+          EXISTING_KEY_PASSWORD: ${{ secrets.CARROT_BRIDGE_SIGNING_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          bt="$ANDROID_HOME/build-tools/35.0.0"
+          out=/tmp/Carrot-Bridge-wide.80-auto-restore-test.apk
+          source=generated-test-key
+          key=/tmp/carrot-test-signing.p12
+          if [[ -n "$EXISTING_KEY_B64" || -n "$EXISTING_KEY_ALIAS" || -n "$EXISTING_STORE_PASSWORD" ]]; then
+            if [[ -z "$EXISTING_KEY_B64" || -z "$EXISTING_KEY_ALIAS" || -z "$EXISTING_STORE_PASSWORD" ]]; then
+              echo "::error::Incomplete signing secrets; refusing partial signing configuration"
+              exit 1
+            fi
+            source=provided-key
+            key=/tmp/carrot-provided-signing.p12
+            printf '%s' "$EXISTING_KEY_B64" | base64 -d > "$key"
+            alias="$EXISTING_KEY_ALIAS"
+            store_password="$EXISTING_STORE_PASSWORD"
+            key_password="${EXISTING_KEY_PASSWORD:-$EXISTING_STORE_PASSWORD}"
+          else
+            alias=carrot-bridge-test
+            store_password="$(openssl rand -hex 18)"
+            key_password="$store_password"
+            keytool -genkeypair -noprompt -alias "$alias" -keyalg RSA -keysize 3072 -validity 365 \
+              -storetype PKCS12 -keystore "$key" -storepass "$store_password" -keypass "$key_password" \
+              -dname "CN=Carrot Bridge wide.80 Test,O=Development,C=TW"
+          fi
+          "$bt/apksigner" sign --ks "$key" --ks-type PKCS12 --ks-key-alias "$alias" \
+            --ks-pass "pass:$store_password" --key-pass "pass:$key_password" \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "$out" /tmp/Carrot-Bridge-wide.80-unsigned.apk
+          "$bt/apksigner" verify --verbose --print-certs "$out"
+          "$bt/zipalign" -P 16 -c 4 "$out"
+          original="$("$bt/apksigner" verify --print-certs /tmp/base/Carrot-Bridge-wide.77.apk | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -n 1)"
+          signed="$("$bt/apksigner" verify --print-certs "$out" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -n 1)"
+          test -n "$original" && test -n "$signed"
+          mode=separate-signature-requires-uninstall
+          if [[ "$original" == "$signed" ]]; then mode=same-signature-upgrade; fi
+          echo "APK_INSTALL_MODE=$mode" >> "$GITHUB_ENV"
+          echo "APK_CERT_SHA256=$signed" >> "$GITHUB_ENV"
+          echo "APK_SIGN_SOURCE=$source" >> "$GITHUB_ENV"
+          rm -f "$key"
+          sha256sum "$out" > /tmp/Carrot-Bridge-wide.80-auto-restore-test.apk.sha256
+      - name: Publish test release (never replace existing tag)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag=wide.80-auto-restore-test-20261124
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "::error::The test release already exists; refuse to replace its binaries."
+            exit 1
+          fi
+          {
+            echo '# Carrot Bridge wide.80 自動恢復投屏測試'
+            echo ''
+            echo '開啟 App 時自動恢復上次選擇：分區一（左側）導航地圖、分區二（右側）神盾／其他 App。'
+            echo '原版 wide.77 的日夜切換投屏修正、wide.79 導航預調保留。'
+            echo ''
+            echo "建置 SHA: $GITHUB_SHA"
+            echo "簽章來源：$APK_SIGN_SOURCE"
+            echo "安裝方式：$APK_INSTALL_MODE"
+            echo "測試 APK SHA-256：$(sha256sum /tmp/Carrot-Bridge-wide.80-auto-restore-test.apk | cut -d' ' -f1)"
+            echo ''
+            if [[ "$APK_INSTALL_MODE" == separate-signature-requires-uninstall ]]; then
+              echo '> **注意：此 APK 與已安裝正式版簽章不同，無法覆蓋安裝。請先備份設定，移除舊版後安裝；Android 卸載會清除 App 資料和上次投屏選擇，首次需重新選擇 App。**'
+            else
+              echo '> 與 wide.77 的憑證 SHA-256 相符；可測試覆蓋更新，建議仍先備份。'
+            fi
+            echo ''
+            echo '測試版尚未通過車機／實車驗收。Shizuku 或 Stellar 未啟動或授權失效時仍需照系統步驟處理。'
+          } > /tmp/RELEASE_NOTES.md
+          gh release create "$tag" \
+            /tmp/Carrot-Bridge-wide.80-auto-restore-test.apk \
+            /tmp/Carrot-Bridge-wide.80-auto-restore-test.apk.sha256 \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title 'Carrot Bridge wide.80 自動恢復投屏（測試）' \
+            --notes-file /tmp/RELEASE_NOTES.md --prerelease --latest=false
