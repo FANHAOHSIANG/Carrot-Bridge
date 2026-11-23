@@ -33,4 +33,4 @@ GitHub Actions 產物為**未簽章** APK，不可直接覆蓋現有版本；需
 4. 管理服務關閉時啟動 Bridge → 恢復服務及授權後可以重連；未授權時只呈現正常權限流程。
 5. 日／夜模式切換、收合或重新開啟分區二 → wide.77 已修復的連線不中斷特性維持。
 
-驗證層級：目前提供的是原始碼修補及 host-only 自動測試。**未宣稱已完成 APK 實際編譯或車機測試。**
+驗證層級：GitHub Actions 已成功編譯 wide.80 **未簽章** APK，通過 host-only 自動測試、19+25 項既有導航檢查及 APK 對齊／完整性檢查；[CI 建置紀錄](https://github.com/FANHAOHSIANG/Carrot-Bridge/actions/runs/45241392612)。**尚未完成原簽章 APK、Android 車機安裝及實車測試。**
