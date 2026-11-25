@@ -25,8 +25,7 @@ SERVICE_RESET = SERVICE_CHANGE + """
     iput-boolean p3, p0, Lcom/navipilot/obf/WideReconnectPolicy;->permissionRequested:Z"""
 
 DECISION_START = """    :cond_13
-
-    const/4 p3, 0x1"""
+"""
 DECISION_NEW = """    :cond_13
 
     # wide81: the manager is alive but permission has not been granted.
@@ -43,9 +42,8 @@ DECISION_NEW = """    :cond_13
     iput-boolean p3, p0, Lcom/navipilot/obf/WideReconnectPolicy;->permissionRequested:Z
     const/4 p3, 0x2
     return p3
-
     :wide81_normal_authorized_reconnect
-    const/4 p3, 0x1"""
+"""
 
 
 def auto_consent_request(primary: Path) -> None:
