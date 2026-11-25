@@ -1,0 +1,53 @@
+name: Inspect wide80 projection callbacks
+on:
+  push:
+    branches: [feature/auto-restore-last-projection-20261124]
+    paths: [.github/workflows/inspect-projection.yml]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+    - uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '21'
+    - name: Fetch fixed base and tools
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        set -euo pipefail
+        mkdir -p /tmp/base
+        gh release download wide.77 --pattern Carrot-Bridge-wide.77.apk --dir /tmp/base
+        curl -fL --retry 3 https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar -o /tmp/apktool.jar
+        unzip -p /tmp/base/Carrot-Bridge-wide.77.apk classes.dex > /tmp/classes.dex
+        java -cp /tmp/apktool.jar variants/wide69/Dalvik.java decode /tmp/classes.dex /tmp/decoded
+    - name: Show relevant smali (no secrets)
+      run: |
+        python3 - <<'PY'
+        from pathlib import Path
+        root=Path('/tmp/decoded/com/navipilot/obf')
+        for fname in ['WideProjectionHelp$1.smali','WideProjectionHelp.smali','WideReconnectPolicy.smali','WideDirect$Pane.smali']:
+            p=root/fname
+            print('\n\n####',fname,p.exists())
+            if not p.exists():continue
+            s=p.read_text()
+            if fname.endswith('$1.smali'):
+                for segment in s.split('.method '):
+                    if ' run()V' in segment:
+                        print('.method '+segment[:12000])
+            elif fname=='WideProjectionHelp.smali':
+                for segment in s.split('.method '):
+                    if any(t in segment[:120] for t in [' attach(', ' connected(', ' start(', ' onOpen(', ' schedule(']):
+                        print('.method '+segment[:3500])
+                print('FIELDS',s[:1600])
+            elif fname=='WideReconnectPolicy.smali':
+                for segment in s.split('.method '):
+                    if ' decide(' in segment:print('.method '+segment[:10000])
+            else:
+                for segment in s.split('.method '):
+                    if ' onAttachedToWindow()' in segment:print('.method '+segment[:6500])
+        PY
