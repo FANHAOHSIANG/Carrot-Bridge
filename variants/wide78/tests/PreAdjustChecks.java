@@ -11,8 +11,8 @@ public class PreAdjustChecks {
     public static void main(String[] args) {
         JSONObject original = input(60, 10000);
         JSONObject result = WideAmapPreAdjust.finish(original, original, 10500);
-        check(result.getJSONObject("pre_adjust").getInt("target_kph") == 60);
-        check(result.getJSONObject("pre_adjust").getLong("generated_at_ms") == 10000);
+        check(!result.has("pre_adjust"));
+        check(result.getInt("road_limit_kph") == 60);
         check(!result.has(WideAmapPreAdjust.KEY) && !result.has(WideAmapPreAdjust.AT));
         check(result.getJSONObject("sdi").getInt("distance_m") == 350);
         check(original.has(WideAmapPreAdjust.KEY)); // No mutation of pending/native input.
@@ -35,7 +35,11 @@ public class PreAdjustChecks {
         JSONObject merged = new JSONObject(original.toString()).put("road_limit_kph", 100);
         result = WideAmapPreAdjust.finish(original, merged, 10500);
         check(result.getInt("road_limit_kph") == 100); // Advisory cannot relabel posted limit.
-        check(result.getJSONObject("pre_adjust").getInt("target_kph") == 60);
+        check(!result.has("pre_adjust"));
+        for (long at = 10000; at < 30000; at += 1000) {
+            JSONObject fresh = input(60, at);
+            check(!WideAmapPreAdjust.finish(fresh, new JSONObject(fresh.toString()).put("road_limit_kph", 100), at).has("pre_adjust"));
+        }
         System.out.println(checks + " pre-adjust checks passed");
     }
 }
