@@ -1,0 +1,95 @@
+name: Publish wide80 with verified original signing certificate
+
+on:
+  push:
+    branches: [feature/auto-restore-last-projection-20261124]
+    paths: ['release/wide80-same-cert/**', '.github/workflows/publish-wide80-original-cert.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: publish-wide80-original-certificate
+  cancel-in-progress: false
+
+jobs:
+  verify-and-release:
+    if: github.ref == 'refs/heads/feature/auto-restore-last-projection-20261124'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'build-tools;35.0.0'
+          log-accepted-android-sdk-licenses: 'false'
+      - name: Download exact previously tested unsigned APK and original wide.77
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/unsigned /tmp/base /tmp/publish
+          gh run download 45241392612 --repo "$GITHUB_REPOSITORY" \
+            --name wide80-unsigned-not-for-installation --dir /tmp/unsigned
+          gh release download wide.77 --repo "$GITHUB_REPOSITORY" \
+            --pattern Carrot-Bridge-wide.77.apk --dir /tmp/base
+          echo "779c550c05ce5b59193f1c1b1a498e8f9b40f5d1eb27789514ab7ba14e51bc82  /tmp/base/Carrot-Bridge-wide.77.apk" | sha256sum -c -
+          echo "ffdc1ed539109c86422b95d9630a32603711a586b80ede1ab0c2f081b3064428  /tmp/unsigned/Carrot-Bridge-wide.80-unsigned.apk" | sha256sum -c -
+      - name: Reconstruct original-signer APK without private key
+        run: |
+          python3 release/wide80-same-cert/reconstruct.py \
+            /tmp/unsigned/Carrot-Bridge-wide.80-unsigned.apk \
+            /tmp/publish/Carrot-Bridge-wide.80-original-signed.apk
+      - name: Verify official Android APK signature and exact certificate match
+        run: |
+          set -euo pipefail
+          bt="$ANDROID_HOME/build-tools/35.0.0"
+          original=/tmp/base/Carrot-Bridge-wide.77.apk
+          rebuilt=/tmp/publish/Carrot-Bridge-wide.80-original-signed.apk
+          "$bt/apksigner" verify --min-sdk-version 31 --verbose --print-certs "$original" > /tmp/base-cert.txt
+          "$bt/apksigner" verify --min-sdk-version 31 --verbose --print-certs "$rebuilt" > /tmp/rebuilt-cert.txt
+          grep -F 'Verified using v2 scheme (APK Signature Scheme v2): true' /tmp/rebuilt-cert.txt
+          original_cert="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' /tmp/base-cert.txt | head -n1)"
+          rebuilt_cert="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' /tmp/rebuilt-cert.txt | head -n1)"
+          test -n "$original_cert"
+          test "$original_cert" = "$rebuilt_cert"
+          test "$rebuilt_cert" = 'eb0f6a44174aecf09cedc237be2ca0305ea491d47b381407d31e903acbd34b46'
+          "$bt/zipalign" -P 16 -c 4 "$rebuilt"
+          sha256sum "$rebuilt" > /tmp/publish/Carrot-Bridge-wide.80-original-signed.apk.sha256
+          echo "PASS: APK v2 signature and original wide.77 certificate match, same-package upgrade supported"
+      - name: Release verified original-signed APK (preserve old versions)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag=wide.80-auto-restore-original-signed-20261124
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::Already released; refuse to overwrite test APK"
+            exit 1
+          fi
+          cat > /tmp/notes.md <<'NOTES'
+          # Carrot Bridge wide.80｜原簽章、自動恢復投屏測試版
+
+          **可以直接覆蓋原版 wide.77，不需先移除舊版**：官方 Android apksigner 已確認此 APK 與 wide.77 的憑證 SHA-256 完全相同。
+
+          修正原先 wide.80 測試版使用不同憑證，導致 Android 顯示「與現有套件衝突」的問題。
+
+          - 開啟 Carrot Bridge 自動恢復上次投屏 App。
+          - 分區一（左側）是導航來源；分區二（右側）是神盾／其他 App 或關閉狀態。
+          - 保留 wide.77 日夜切換修正和 wide.79 共用預調。
+          - 以歷史原始私鑰在使用者私人環境完成簽署；GitHub **僅保存對固定 APK 有效的公開簽章區塊**，不保存 keystore、密碼或私鑰。
+          - GitHub Workflow 下載雜湊鎖定的原始 unsigned build，重建並逐一核對官方簽章、原版 wide.77 憑證、SHA256、ZIP 對齊。
+          - 尚未完成使用者 Android 車機實測，屬測試版，請停車時更新及測試。
+
+          安裝請選擇下方 **Carrot-Bridge-wide.80-original-signed.apk**；舊的 wide.80-auto-restore-test-20261124 為不同簽章，不應用於覆蓋更新。
+          NOTES
+          gh release create "$tag" \
+            /tmp/publish/Carrot-Bridge-wide.80-original-signed.apk \
+            /tmp/publish/Carrot-Bridge-wide.80-original-signed.apk.sha256 \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title 'Carrot Bridge wide.80 原簽章｜自動投屏測試' \
+            --notes-file /tmp/notes.md --prerelease --latest=false
