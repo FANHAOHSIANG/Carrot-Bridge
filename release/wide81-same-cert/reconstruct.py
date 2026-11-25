@@ -72,7 +72,7 @@ def signing_block():
 
 def locate_eocd(data):
     for i in range(len(data) - 22, max(-1, len(data) - 22 - 65535), -1):
-        if data[i:i+4] == b"PK\\x05\\x06" and i + 22 + u32(data, i + 20) == len(data):
+        if data[i:i+4] == b"PK\x05\x06" and i + 22 + struct.unpack_from("<H", data, i + 20)[0] == len(data):
             return i
     raise ValueError("ZIP EOCD missing")
 
