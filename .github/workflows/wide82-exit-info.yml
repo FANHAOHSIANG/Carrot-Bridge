@@ -3,6 +3,9 @@ on:
   push:
     branches: [feature/wide82-amap-exit-info-20261126]
     paths: ['variants/wide79/**', 'variants/wide82/**', '.github/workflows/wide82-exit-info.yml']
+  pull_request:
+    branches: [feature/full-auto-projection-20261125]
+    paths: ['variants/wide82/**', '.github/workflows/wide82-exit-info.yml']
   workflow_dispatch:
 permissions:
   contents: read
