@@ -12,16 +12,26 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
-        with:
-          log-accepted-android-sdk-licenses: 'false'
-      - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Use runner SDK and install only missing pinned tools
+        run: |
+          if [[ ! -f "$ANDROID_HOME/platforms/android-35/android.jar" || ! -x "$ANDROID_HOME/build-tools/35.0.0/d8" ]]; then
+            sm="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+            test -x "$sm"
+            set +o pipefail
+            yes | "$sm" --licenses >/dev/null
+            set -o pipefail
+            "$sm" 'platforms;android-35' 'build-tools;35.0.0'
+          fi
+          test -f "$ANDROID_HOME/platforms/android-35/android.jar"
+          test -x "$ANDROID_HOME/build-tools/35.0.0/d8"
       - run: bash variants/gaode-lane-probe/android/build.sh
       - uses: actions/upload-artifact@v4
         with:
