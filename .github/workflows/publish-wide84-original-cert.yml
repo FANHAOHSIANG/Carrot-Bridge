@@ -1,0 +1,75 @@
+name: Publish original-signed wide84
+on:
+  pull_request:
+    branches: [feature/full-auto-projection-20261125]
+    paths: ['release/wide84-same-cert/**', '.github/workflows/publish-wide84-original-cert.yml']
+  push:
+    branches: [feature/full-auto-projection-20261125]
+    paths: ['release/wide84-same-cert/**', '.github/workflows/publish-wide84-original-cert.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: wide84-release-${{ github.event_name }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'build-tools;35.0.0'
+          log-accepted-android-sdk-licenses: 'false'
+      - name: Recover exact APK and verify original signer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/unsigned /tmp/base /tmp/publish
+          gh run download 45748324429 --repo "$GITHUB_REPOSITORY" --name wide84-unsigned-not-for-installation --dir /tmp/unsigned
+          gh release download wide.77 --repo "$GITHUB_REPOSITORY" --pattern Carrot-Bridge-wide.77.apk --dir /tmp/base
+          echo "779c550c05ce5b59193f1c1b1a498e8f9b40f5d1eb27789514ab7ba14e51bc82  /tmp/base/Carrot-Bridge-wide.77.apk" | sha256sum -c -
+          python3 release/wide84-same-cert/reconstruct.py /tmp/unsigned/Carrot-Bridge-wide.84-unsigned.apk /tmp/publish/Carrot-Bridge-wide.84.apk
+          bt="$ANDROID_HOME/build-tools/35.0.0"
+          "$bt/apksigner" verify --min-sdk-version 31 --verbose --print-certs /tmp/base/Carrot-Bridge-wide.77.apk > /tmp/base-cert.txt
+          "$bt/apksigner" verify --min-sdk-version 31 --verbose --print-certs /tmp/publish/Carrot-Bridge-wide.84.apk > /tmp/rebuilt-cert.txt
+          grep -F 'Verified using v3 scheme (APK Signature Scheme v3): true' /tmp/rebuilt-cert.txt
+          cert="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' /tmp/rebuilt-cert.txt | head -n1)"
+          test "$cert" = "$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' /tmp/base-cert.txt | head -n1)"
+          test "$cert" = 'eb0f6a44174aecf09cedc237be2ca0305ea491d47b381407d31e903acbd34b46'
+          "$bt/zipalign" -P 16 -c 4 /tmp/publish/Carrot-Bridge-wide.84.apk
+          cd /tmp/publish
+          sha256sum Carrot-Bridge-wide.84.apk > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wide84-original-signed
+          path: /tmp/publish/*
+  publish:
+    needs: verify
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/feature/full-auto-projection-20261125'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: wide84-original-signed
+          path: /tmp/publish
+      - name: Publish verified APK without overwriting a previous release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd /tmp/publish
+          sha256sum -c SHA256SUMS.txt
+          echo '0138b25d3c17295a28a662dd009f2df6a5efb374d879991bddf025d4c1df8de0  Carrot-Bridge-wide.84.apk' | sha256sum -c -
+          if gh release view wide.84 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::Existing release; refusing overwrite"
+            exit 1
+          fi
+          gh release create wide.84 Carrot-Bridge-wide.84.apk SHA256SUMS.txt --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title 'Carrot Bridge wide.84｜高德路線資料擴充預發行' --notes '原簽章預發行，可覆蓋 wide.83。保留自動投屏，增加高德路線總長、剩餘距離、時間及新版轉向圖示原始資料。兩個 C4 Test 分支已合併接收配套。尚未啟用新版 PRE 實際控速或線性升降速，非實車控制驗收版本。' --prerelease --latest=false
