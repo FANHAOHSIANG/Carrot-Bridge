@@ -94,6 +94,6 @@ public final class WideAmapExitInfo {
             result.put(FIELD,new JSONObject().put("source","amap_auto").put("scope","display_only")
                 .put("generated_at_ms",sample.wall).put("fields",sample.data));
             return result;
-        } catch(Exception invalid) { return null; }
+        } catch(Exception invalid) { return value; }
     }
 }
