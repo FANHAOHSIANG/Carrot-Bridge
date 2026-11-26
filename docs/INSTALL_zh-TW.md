@@ -1,8 +1,8 @@
 # Carrot Bridge 安裝與使用
 
-適用於 **Carrot Bridge wide.70**，支援 Android 12 以上手機或車機。C3、C3X 和 comma four 可透過區域網路連線，須使用支援 Carrot Navi v2 的 Carrot 版本。
+適用於 **Carrot Bridge wide.85**，支援 Android 12 以上手機或車機。C3、C3X 和 comma four 可透過區域網路連線，須使用支援 Carrot Navi v2 的 Carrot 版本。
 
-[回首頁與下載清單](../README.md#下載與需求) · [完整功能手冊](FEATURES_zh-TW.md) · [官方設定建議](CARROT_SETTINGS_zh-TW.md) · [外接 HUD](HUD_zh-TW.md) · [分支比較](C4_BRANCHES_zh-TW.md) · [comma four 測試分支安裝](C4_TEST_INSTALL_zh-TW.md) · [直接下載主程式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.70/Carrot-Bridge-wide.70.apk)
+[回首頁與下載清單](../README.md#下載與需求) · [完整功能手冊](FEATURES_zh-TW.md) · [官方設定建議](CARROT_SETTINGS_zh-TW.md) · [外接 HUD](HUD_zh-TW.md) · [分支比較](C4_BRANCHES_zh-TW.md) · [comma four 測試分支安裝](C4_TEST_INSTALL_zh-TW.md) · [直接下載主程式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.85/Carrot-Bridge-wide.85.apk)
 
 wide.70 沿用 wide.69 的簽章憑證。[wide.70 更新與操作](../variants/wide70/README.md) · [wide.69 舊版操作](https://github.com/FANHAOHSIANG/Carrot-Bridge/blob/7be17e22bc2997281dae7a9dd1ffc7381a2d6f7e/docs/INSTALL_zh-TW.md)
 
@@ -17,7 +17,7 @@ wide.70 沿用 wide.69 的簽章憑證。[wide.70 更新與操作](../variants/w
 
 1. 選裝 [Stellar APK](https://github.com/roro2239/Stellar/releases/download/v1.1%28101000%29/stellar-v1.1-release.apk) 或 [Shizuku APK](https://github.com/RikkaApps/Shizuku/releases/download/v13.6.0/shizuku-v13.6.0.r1086.2650830c-release.apk)。
 2. 在裝置的「開發人員選項」開啟「無線偵錯」。在投屏工具內開始配對，依系統提示輸入配對碼，再回工具按「啟動」。使用 Stellar 時須開啟 Shizuku 相容層。
-3. 確認工具顯示服務已啟動。回 Carrot Bridge，按分區一底部的「分區二 ⋯ → 啟動投屏／授權」，允許 Carrot Bridge 存取。
+3. 確認工具顯示服務已啟動。回 Carrot Bridge，已授權且已選定 App 時會嘗試自動恢復投屏。首次授權請依 Android 提示允許；若仍停在等待畫面，再從「啟動投屏／授權」檢查。
 4. 「分區二 ⋯ → 投屏安裝與授權」可換管理工具並查看服務、授權和連線狀態。裝置重啟後若服務停止，到同一個工具再啟動。
 
 車機若沒有無線偵錯，可在支援 USB 偵錯時依工具提示用電腦 ADB 啟動服務。[投屏工具詳細步驟](../third_party/projection/README.md)
@@ -72,6 +72,6 @@ Carrot Bridge 內建「Amap2Tesla 僅投神盾」。準備神盾和投屏授權�
 | 視窗調整後仍不合框 | 記下 App 版本、手機或車機型號、Android 版本與目前投屏來源，附問題畫面及診斷報告。 |
 | APK 無法安裝 | 檢查 Android 版本、檔案是否完整，以及既有 App 的套件簽章。 |
 
-主 APK 的 SHA-256 列在 [wide.70 發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.70)。macOS 可用 `shasum -a 256 檔名.apk`，Linux 可用 `sha256sum 檔名.apk`，Windows PowerShell 可用 `Get-FileHash 檔名.apk -Algorithm SHA256`。
+主 APK 的 SHA-256 列在 [wide.85 發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.85)。macOS 可用 `shasum -a 256 檔名.apk`，Linux 可用 `sha256sum 檔名.apk`，Windows PowerShell 可用 `Get-FileHash 檔名.apk -Algorithm SHA256`。
 
 [wide.40 舊版說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/blob/0299f57241f1baeccabb1e8e12c96565d52fd1c2/docs/INSTALL_zh-TW.md)
