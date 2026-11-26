@@ -83,6 +83,24 @@ wide.85 的觀察 ID **不是**已確認的路線 ID、交流道事件 ID 或匝
 
 [分支比較](docs/C4_BRANCHES_zh-TW.md) · [官方設定說明](docs/CARROT_SETTINGS_zh-TW.md) · [測試分支安裝及回復](docs/C4_TEST_INSTALL_zh-TW.md)
 
+### 實際 HUD 導航畫面
+
+以下是 CarrotMacHUD main 實際 renderer 以模擬 Carrot Bridge 導航資料輸出的畫面，不是 AI 概念圖或實車拍攝。C4 直連也可依配套分支接收 Navi v2 資料，版面和顯示位置可能不同。
+
+**道路速限：** 左側圓牌 60 km/h。
+
+![HUD 道路速限](https://raw.githubusercontent.com/FANHAOHSIANG/carrotMAC-HUD/fe2188c27d20109b7e3646fa6d306594687eada4/docs/images/hud/speed-limit.png)
+
+**測速與號誌：** 執法速限 50 km/h、距離 350 m；上方紅燈倒數 24 秒。
+
+![HUD 測速與紅燈倒數](https://raw.githubusercontent.com/FANHAOHSIANG/carrotMAC-HUD/fe2188c27d20109b7e3646fa6d306594687eada4/docs/images/hud/camera-red.png)
+
+**導航模式 7：** 行車資訊＋右側導航路線。
+
+![HUD 模式 7](https://raw.githubusercontent.com/FANHAOHSIANG/carrotMAC-HUD/fe2188c27d20109b7e3646fa6d306594687eada4/docs/images/hud/mode7.png)
+
+[更多 HUD 畫面與支援說明](docs/HUD_zh-TW.md) · [IONIQ 5 煞車燈、方向燈及雙黃燈 GIF](https://github.com/FANHAOHSIANG/carrotMAC-HUD/blob/main/docs/HUD_GALLERY_zh-TW.md)
+
 ## 常見問題
 
 | 問題 | 先檢查 |

@@ -6,6 +6,42 @@
 
 TURZX 外接 HUD 會顯示 comma 的車況、駕駛輔助狀態及收到的導航提示。以 1920 × 462 橫向畫面為例，預設左側是車道和車況，右側有導航時顯示引導，無導航時切回行程摘要。Carrot Bridge 的地圖和神盾投屏繼續在 Android 車機或手機上操作。
 
+## 實際 HUD 畫面參考
+
+圖片由 CarrotMacHUD 的實際 HUD renderer（主分支 `386e730`＋固定 helper `a564ce1d`）離線產生，輸入模擬車況與 Navi v2 對應資料，非實車截圖、非 AI 概念圖。C4 直連的實際外觀可能不同；依 C4 分支與畫面模式支援。這些數字僅為展示。兩個專案共用同一份圖片，固定於已合併的圖庫提交 `fe2188c`。
+
+| 畫面資訊 | 資料來源 |
+| --- | --- |
+| 道路速限圓牌 | 有效 TDX／OSM 或配套車況速限；依車端設定及新鮮資料 |
+| 測速牌與剩餘距離 | 有效高德 SDI 資料及車端接收配套；神盾紅光仍以 Android 端為主 |
+| 紅／綠燈倒數 | 有效導航來源提供燈態及秒數，未知燈色不猜測 |
+| 轉彎及路線 | Navi v2 引導、有效路線或地圖影像 |
+| 交流道資訊 | 高德車機版的有效出口文字及剩餘路程；模式 6 標題區 |
+
+### 道路速限
+
+![實際 HUD 速限圓牌](https://raw.githubusercontent.com/FANHAOHSIANG/carrotMAC-HUD/fe2188c27d20109b7e3646fa6d306594687eada4/docs/images/hud/speed-limit.png)
+
+### 測速提醒、紅燈倒數
+
+![實際 HUD 測速牌、350 m 與紅燈 24 秒](https://raw.githubusercontent.com/FANHAOHSIANG/carrotMAC-HUD/fe2188c27d20109b7e3646fa6d306594687eada4/docs/images/hud/camera-red.png)
+
+### 綠燈倒數
+
+![實際 HUD 綠燈 12 秒與測速牌](https://raw.githubusercontent.com/FANHAOHSIANG/carrotMAC-HUD/fe2188c27d20109b7e3646fa6d306594687eada4/docs/images/hud/camera-green.png)
+
+### 全導航（模式 6）
+
+![實際 HUD 全導航](https://raw.githubusercontent.com/FANHAOHSIANG/carrotMAC-HUD/fe2188c27d20109b7e3646fa6d306594687eada4/docs/images/hud/navigation.png)
+
+### 行車＋導航（模式 7）
+
+![實際 HUD 模式 7](https://raw.githubusercontent.com/FANHAOHSIANG/carrotMAC-HUD/fe2188c27d20109b7e3646fa6d306594687eada4/docs/images/hud/mode7.png)
+
+模式 6 的交流道標題及個別繁中文字出現字型缺字（問號），如實保留，未後製修飾。合成路線不代表真實地圖或實車導航。測速、速限與倒數需要有效資料，並非每個導航來源都能提供。
+
+IONIQ 5 煞車、左右方向燈、雙黃燈 GIF 與 ROAD 類別展示放在 [CarrotMacHUD 實際畫面圖庫](https://github.com/FANHAOHSIANG/carrotMAC-HUD/blob/main/docs/HUD_GALLERY_zh-TW.md)。燈號讀取車況，非 Carrot Bridge 控制。[原始渲染紀錄](https://github.com/FANHAOHSIANG/carrotMAC-HUD/actions/runs/45793915252)。
+
 ## 接法與適用裝置
 
 | 接法 | 適用裝置 | 使用方式 |
