@@ -41,3 +41,12 @@ jobs:
           name: wide83-unsigned-not-for-installation
           path: /tmp/Carrot-Bridge-wide.83-unsigned.apk
           retention-days: 7
+      - name: Stage public Android signing verifier
+        run: |
+          cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" /tmp/apksigner.jar
+          sha256sum /tmp/apksigner.jar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public-apksigner-35.0.0
+          path: /tmp/apksigner.jar
+          retention-days: 7
