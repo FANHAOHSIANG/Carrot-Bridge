@@ -4,6 +4,17 @@
 
 本文的**官方 Carrot**是 ajouatom 的 `carrot-wip` 滾動開發分支。C3、C3X、comma four 可搭配支援 Carrot Navi v2 的版本使用 App。個人分支的安裝短網址適用於 comma four（MICI）。
 
+## wide.85 最新配套（2026-11-26）
+
+| 搭配 | 版本快照與用途 |
+| --- | --- |
+| Android | [wide.85](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.85)，原簽章，新增觀察識別碼 |
+| 獨立 Test | [15a81ff](https://github.com/FANHAOHSIANG/openpilot-carrot/commit/15a81ff840cc6a1e92519f6e0d4463e37db23f32)，接收並記錄 wide.85 資料 |
+| Tony 融合 Test | [5eda71a](https://github.com/FANHAOHSIANG/openpilot-carrot/commit/5eda71aad247220246bc8b662b6d5642e9c481fb)，同一組導航資料配套；車控選項依融合版本 |
+| Mac HUD | [204b941](https://github.com/FANHAOHSIANG/carrotMAC-HUD/commit/204b94185a7c11fc11e5e790b7b7b5c861e001ca)，高德出口標題資訊 |
+
+新版 PRE 控速與線性升降速未啟用；觀察識別碼只用於記錄，不是匝道完成事件。以下官方／獨立 Test 比較為 11 月 15 日歷史核對，不推論官方現在的功能或 Tony 的全部功能。[最新配套與驗證](WIDE85_zh-TW.md)
+
 ## 核對版本
 
 | 元件 | 核對基準（2026-11-15） |
@@ -58,7 +69,7 @@
 
 ### HUD 與版本限制
 
-測試分支已有 USB HUD 的三燈顯示及測速提醒。高德手機 Link 的中性倒數需要 wide.71 的對應輸出，目前正式發布的 wide.70 尚無這項輸出。這組號誌資料用於畫面提示。
+測試分支已有 USB HUD 的三燈顯示及測速提醒。高德手機 Link 的中性倒數需要 wide.71 的對應輸出，是否實際收到手機版輸出，須依 App、來源和接收版本確認。這組號誌資料用於畫面提示。
 
 HUD 可用的轉彎、道路資訊、地圖影像取決於來源與版本。comma 直連和 CarrotMacHUD 需要各自配對。PR #41 藍線修正仍為草稿。各地圖、兩種接線及畫面模式見[外接 HUD 畫面與功能](HUD_zh-TW.md)。
 
