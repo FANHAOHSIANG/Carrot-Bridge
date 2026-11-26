@@ -1,0 +1,98 @@
+name: Promote verified wide85 APK to official release
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - README.md
+      - docs/WIDE85_zh-TW.md
+      - .github/workflows/promote-wide85.yml
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/promote-wide85.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: promote-wide85-${{ github.event_name }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'build-tools;35.0.0'
+          log-accepted-android-sdk-licenses: 'false'
+      - name: Verify existing release bytes and signer without rebuilding
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/verified
+          gh release view wide.85 --repo "$GITHUB_REPOSITORY" --json tagName,isDraft,isPrerelease,assets,url
+          gh release download wide.85 --repo "$GITHUB_REPOSITORY" --pattern Carrot-Bridge-wide.85.apk --dir /tmp/verified
+          echo '344ae6f633a70e92923b627e664e927fda714dca37e8e098e21004ec94a33483  /tmp/verified/Carrot-Bridge-wide.85.apk' | sha256sum -c -
+          bt="$ANDROID_HOME/build-tools/35.0.0"
+          "$bt/apksigner" verify --min-sdk-version 31 --verbose --print-certs /tmp/verified/Carrot-Bridge-wide.85.apk > /tmp/cert.txt
+          grep -F 'Verified using v3 scheme (APK Signature Scheme v3): true' /tmp/cert.txt
+          test "$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' /tmp/cert.txt | head -n1)" = 'eb0f6a44174aecf09cedc237be2ca0305ea491d47b381407d31e903acbd34b46'
+          "$bt/zipalign" -P 16 -c 4 /tmp/verified/Carrot-Bridge-wide.85.apk
+      - name: Check current documentation references
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          files=['README.md','docs/INSTALL_zh-TW.md','docs/FEATURES_zh-TW.md','docs/HUD_zh-TW.md','docs/C4_BRANCHES_zh-TW.md','docs/WIDE85_zh-TW.md','CHANGELOG.md','docs/BUILD_zh-TW.md']
+          for name in files:
+              path=Path(name)
+              content=path.read_text()
+              assert 'wide.85' in content, name
+              for link in re.findall(r'\]\(([^\s)]+)\)',content):
+                  if link.startswith(('https://','http://','#')): continue
+                  # Existing historical links remain; explicitly verify new user guide links.
+                  if 'WIDE85_zh-TW.md' in link:
+                      assert (path.parent/link.split('#')[0]).is_file(),(name,link)
+          assert 'releases/download/wide.85/Carrot-Bridge-wide.85.apk' in Path('README.md').read_text()
+          print('wide85 guides and download references verified')
+          PY
+  promote:
+    needs: verify
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Promote existing release, preserving assets and tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/before /tmp/after
+          gh release download wide.85 --repo "$GITHUB_REPOSITORY" --pattern Carrot-Bridge-wide.85.apk --dir /tmp/before
+          echo '344ae6f633a70e92923b627e664e927fda714dca37e8e098e21004ec94a33483  /tmp/before/Carrot-Bridge-wide.85.apk' | sha256sum -c -
+          gh release view wide.85 --repo "$GITHUB_REPOSITORY" --json isDraft,tagName --jq '(.isDraft == false and .tagName == "wide.85")' | grep -Fx true
+          cat > /tmp/notes.md <<'EOF'
+          ## Carrot Bridge wide.85｜正式版
+
+          [快速開始與全部功能](https://github.com/FANHAOHSIANG/Carrot-Bridge#三步開始使用) · [安裝與排錯](https://github.com/FANHAOHSIANG/Carrot-Bridge/blob/main/docs/INSTALL_zh-TW.md) · [版本、C4／HUD 配套與驗證](https://github.com/FANHAOHSIANG/Carrot-Bridge/blob/main/docs/WIDE85_zh-TW.md)
+
+          - **下載 Carrot-Bridge-wide.85.apk**。Android 12+，與 wide.84 相同的原簽章，可覆蓋同簽章舊版。
+          - 保留自動投屏與高德導航欄位；增加觀察工作階段及樣本序號，方便 App ZIP 與 C4 Log 比對。
+          - 兩個 C4 Test 分支已有接收配套，C4 直連與 Mac HUD 可依來源顯示出口名稱、明確方向文字和格式化剩餘路程（導航模式 6）。
+          - 投屏工具仍須可用且已授權，首次授權不會繞過 Android 提示。自動投屏實機效果仍須確認。
+          - 觀察識別碼不是已確認的路線或匝道事件；**新版 PRE 控速及線性升降速尚未啟用**。正式版表示 App 發布層級，不代表實車控制驗收。
+          - 沿用已發布預發行版的同一份 APK，不重建、不更換簽章、不替換附件。SHA-256 見 SHA256SUMS.txt。
+
+          歷史版本仍保留。請勿在行駛中設定或刻意重現危險情況。
+          EOF
+          gh release edit wide.85 --repo "$GITHUB_REPOSITORY" --title 'Carrot Bridge wide.85｜正式版' --notes-file /tmp/notes.md --prerelease=false --latest
+          gh release view wide.85 --repo "$GITHUB_REPOSITORY" --json isPrerelease,isDraft,tagName,url --jq '(.isPrerelease == false and .isDraft == false and .tagName == "wide.85")' | grep -Fx true
+          gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq '.tagName' | grep -Fx wide.85
+          gh release download wide.85 --repo "$GITHUB_REPOSITORY" --pattern Carrot-Bridge-wide.85.apk --dir /tmp/after
+          cmp /tmp/before/Carrot-Bridge-wide.85.apk /tmp/after/Carrot-Bridge-wide.85.apk
+          echo 'Verified: wide.85 is Latest official release, APK unchanged.'

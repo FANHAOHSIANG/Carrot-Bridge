@@ -1,126 +1,101 @@
 # Carrot Bridge
 
-**讓 Android 手機或車機同時顯示導航、神盾與 comma 車況，並把支援的導航資料交給 Carrot。**
+**一個 Android App，整合導航、神盾、comma 車況與外接 HUD。**
 
-整合高德車機版、高德一般版、Google 地圖投屏與內建 Google 導航 NOO。可單獨當分割畫面使用，也可連接 **C3、C3X 或 comma four**，提供轉彎引導、路線及已確認的道路速限。comma 須使用支援 Carrot Navi v2 的 Carrot 版本。車輛是否採用資料，取決於分支、設定、模型及車型支援。
-
-**[下載 wide.83 原簽章自動投屏更新](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.83/Carrot-Bridge-wide.83.apk)** · [wide.83 發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.83)
-
-wide.83 已通過 APK 建置、原簽章驗證及 SHA-256 核對。保留上次投屏選擇，改由有效投屏區在 App 開啟後自動啟動原投屏回呼；管理服務須可用，首次授權仍須使用者同意。支援高德車機出口資料傳輸與配套 C4／HUD 顯示。尚未實機確認自動投屏，不含新版 PRE 控速或線性升降速修改。原有實機驗收版 wide.77 仍可下載。
-
-**[下載已實機驗收的 wide.77 正式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.77/Carrot-Bridge-wide.77.apk)** · **[完整功能手冊](docs/FEATURES_zh-TW.md)** · **[安裝與操作](docs/INSTALL_zh-TW.md)** · **[官方設定建議](docs/CARROT_SETTINGS_zh-TW.md)** · **[外接 HUD](docs/HUD_zh-TW.md)** · **[分支比較](docs/C4_BRANCHES_zh-TW.md)** · **[測試分支安裝](docs/C4_TEST_INSTALL_zh-TW.md)**
-
-> [!WARNING]
-> `test/carrot-wip-upstream-20261104` 是持續變動的個人測試分支，請小心使用。可能發生非預期減速、路線偏差、功能失效或退出控制。請停車設定，先確認車型與線束支援、保留回復方法，駕駛全程注意道路並隨時接管。離線測試通過不等於實車驗收，不能依賴 App 或測試分支自動完成路口轉彎。
-
-## wide.77 正式版
-
-**[wide.77 發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.77)** · **[功能示意圖、各地圖可顯示的效果、搭配分支與 Carrot Web 設定](docs/WIDE74_HUD_zh-TW.md)**
-
-wide.77 補上主畫面的日夜模式與輸入硬體設定變更處理，避免車機進出隧道切換夜間模式時，Android 預設重建 Carrot Bridge 並拆掉兩個投屏連線；分區二重選同一個 App 也不再重建投屏。保留 wide.75 分區二開關與 wide.76 高德測速紅光修正，原簽章可覆蓋更新。Manifest、DEX、APK 簽章與增量還原核對通過，**使用者於 2026-11-17 回報使用正常並確認轉為正式版；沿用已驗收的相同 APK，已安裝 wide.77 不必重裝**。[修正、其他重啟因素與測試方式](variants/wide77/README.md)
+適用 Android 12 以上手機／車機。可單獨當分割畫面使用，也可搭配支援 Carrot Navi v2 的 C3、C3X 或 comma four。高德與內建 Google 導航可提供有效引導；車輛是否採用資料仍由 Carrot 版本、車型、設定及安全條件決定。
 
 ## 下載與需求
 
-目前正式發布版 **wide.77**，需 **Android 12 以上**。投屏時在同一台 Android 安裝目標 App，並啟動 **Stellar 或 Shizuku 擇一**；Stellar 須開啟 Shizuku 相容層。
-
-| 項目 | 下載／教學 | 什麼時候需要 |
+| 版本／工具 | 下載 | 用途 |
 | --- | --- | --- |
-| **Carrot Bridge wide.77** | **[主程式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.77/Carrot-Bridge-wide.77.apk)** | 所有功能入口；同簽章舊版可覆蓋更新 |
-| Stellar 1.1 | [官方 APK](https://github.com/roro2239/Stellar/releases/download/v1.1%28101000%29/stellar-v1.1-release.apk) | 投屏授權工具，與 Shizuku 擇一 |
-| Shizuku 13.6.0 | [官方 APK](https://github.com/RikkaApps/Shizuku/releases/download/v13.6.0/shizuku-v13.6.0.r1086.2650830c-release.apk) | 投屏授權工具，與 Stellar 擇一 |
-| 高德車機版／一般版 | [車機版](https://www.amapauto.com/) · [一般版](https://mobile.amap.com/cn/download.html) | 選用對應高德來源時 |
-| Google 地圖 | [Google Play](https://play.google.com/store/apps/details?id=com.google.android.apps.maps&hl=zh-TW) | 選「Google 地圖（僅投屏）」時 |
-| Google 導航 NOO | [Google 金鑰設定](docs/GOOGLE_SDK_zh-TW.md) | 已內建；需 Google Play 服務、網路、定位與自己的 Cloud 金鑰，使用量可能計費 |
-| 神盾測速照相 | [Google Play](https://play.google.com/store/apps/details?id=tw.com.ainvest.outpack&hl=zh-TW) | 神盾投屏與 App 紅光提醒 |
+| **Carrot Bridge wide.85** | **[下載 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.85/Carrot-Bridge-wide.85.apk)** · [版本說明與 SHA-256](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.85) | 目前主推版本，原簽章可覆蓋相容舊版 |
+| wide.77 | [歷史驗收版](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.77) | 曾獲使用者實機確認；保留歷史下載，Android 降版可能需備份及重裝 |
+| Stellar | [官方 APK](https://github.com/roro2239/Stellar/releases/download/v1.1%28101000%29/stellar-v1.1-release.apk) | 投屏管理工具，需開啟 Shizuku 相容層 |
+| Shizuku | [官方 APK](https://github.com/RikkaApps/Shizuku/releases/download/v13.6.0/shizuku-v13.6.0.r1086.2650830c-release.apk) | 與 Stellar 擇一 |
+| 高德地圖 | [車機版](https://www.amapauto.com/) · [一般版](https://mobile.amap.com/cn/download.html) | 依所選地圖安裝 |
+| Google 地圖 | [Google Play](https://play.google.com/store/apps/details?id=com.google.android.apps.maps&hl=zh-TW) | 官方地圖投屏 |
+| 神盾測速照相 | [Google Play](https://play.google.com/store/apps/details?id=tw.com.ainvest.outpack&hl=zh-TW) | 神盾投屏與紅光提醒 |
 
-[最新版與 SHA-256](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/latest) · [歷史版本](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases) · [投屏授權步驟](third_party/projection/README.md)
+[所有版本](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases) · [詳細安裝](docs/INSTALL_zh-TW.md) · [Google NOO 金鑰](docs/GOOGLE_SDK_zh-TW.md) · [投屏授權](third_party/projection/README.md)
 
-## 每個地圖可以做什麼？
+> [!IMPORTANT]
+> wide.85 沿用原簽章，已通過建置、APK v3 簽章與檔案雜湊檢查。正式發布不等於每種車機已驗收；自動投屏實機效果仍須確認。**新版交流道 PRE 控速、線性升降速尚未接入實際車控。** 請停車設定，不以 App 畫面或導航引導代替駕駛判斷。
 
-| 來源 | 畫面與操作 | 可交給 comma 的資料 | 用法與限制 |
-| --- | --- | --- | --- |
-| **高德車機版** | 投屏同機高德車機 App，在高德內設目的地 | 導航通道提供的轉彎、距離等引導，其他欄位依實際收到的資料 | 適合車機介面；有畫面不代表廣播已到達，完整路線與相機不保證每個版本都有 |
-| **高德一般版** | 投屏同機高德手機 App，透過 Link 授權與訂閱 | 有效轉彎、距離、道路名稱；收到完整選定路線後可傳路線與下一步 | 使用高德自己的路線，不另請 Mapbox 重規劃；長路線以測試分支配套較完整，手機版相機仍未確認 |
-| **Google 地圖（僅投屏）** | 顯示官方 Google Maps App | 此模式不提供該 App 的路線／轉彎串接 | 使用熟悉的 Google Maps 畫面與語音；要把 Google 路線送 comma，選 NOO |
-| **Google 導航 NOO** | 在 Carrot Bridge 內搜尋、收藏、規劃與導航 | SDK 提供的目前／下一轉彎、距離、位置與路線 | 不是讀取另一個 Google Maps App；不保證有 Google 速限、相機或號誌 |
-| **神盾測速照相** | 分區一投屏，提醒與語音由神盾提供 | wide.70 的神盾影像辨識未接入 comma 測速出站流程 | 符合辨識條件時，Carrot Bridge 四邊閃紅光 |
-| **TDX／OSM 道路速限** | 獨立道路資料功能，可顯示 OSM 圓牌 | 開啟傳送後，優先送道路與方向已確認的 TDX，否則採合格 OSM | 與導航來源不同；衝突、過期或道路不明時撤銷，不是測速點清冊 |
+## 三步開始使用
 
-三個可提供導航資料的來源是高德車機版、高德一般版、Google 導航 NOO；**四個地圖選項的能力不同**。[各來源操作與判讀](docs/FEATURES_zh-TW.md#地圖與導航)
+1. **安裝**：下載 wide.85 APK；同簽章舊版可直接覆蓋。依需求裝高德、Google Maps、神盾。只使用分割投屏不需要 comma。
+2. **設定投屏**：啟動 Stellar 或 Shizuku，首次依 Android 正常授權。橫向左側地圖是分區二；右側神盾、其他 App 或時鐘是分區一。選好兩區後，重新開 App 會嘗試自動恢復；服務停止或授權撤銷時仍須正常啟動／授權。
+3. **連接 comma（選用）**：Android 與 comma 使用互通的區域網路，在 App 填入實際 comma 位址。停車核對來源、引導、Navi v2 與車端收件。Google NOO 另外需要自己的 [Google SDK Key](docs/GOOGLE_SDK_zh-TW.md)，可能產生 API 費用。
 
-## 三個導航來源的 NOO 能力
+## 地圖怎麼選
 
-本專案使用 **導航輔助（NOO）** 這個名稱，對應 App 裡的「Google 導航 NOO」。三個來源提供相符的轉彎種類與距離時，Carrot 可依設定計算 **ATC 轉彎減速**。有可用的路線幾何時，才有條件參與 **路線彎速（ROUTE）**。
+| 地圖選項 | 投屏／導航 | 傳給 comma 的資料 |
+| --- | --- | --- |
+| 高德車機版 | 同機高德車機 App | 有效轉彎、距離、道路、測速／號誌（依實際廣播）；wide.82–85 增加出口及路線原始資料 |
+| 高德一般版 | 同機高德 App、Link 授權 | 有效引導、路名、選定路線及下一步；相機與倒數視來源輸出 |
+| Google 地圖（僅投屏） | 官方 Google Maps App | 不擷取該 App 的導航引導或路線 |
+| Google 導航 NOO | 內建 SDK、搜尋／收藏／導航 | 目前及下一引導、距離、位置、路線；不保證提供 Google 速限、測速或號誌 |
 
-| 來源 | 適合用來做什麼 |
+高德不需額外申請 Google Key；一般版需正常 Link 認證。完整路線須來源真的供應，不另請 Mapbox 重規劃。TDX／OSM 是獨立道路資料來源，不是 Google Maps 回傳。
+
+## 功能總覽
+
+| 功能 | 怎麼用／範圍 |
 | --- | --- |
-| **高德車機版** | 使用車機導航的轉彎、距離等廣播。收到有效執法速限與距離時，也可提供測速提醒及對應減速候選。 |
-| **高德一般版** | 透過 Link 使用高德的轉彎和選定路線。長路線可用個人測試分支的接收配套，手機版測速仍待封包驗證。 |
-| **Google 導航 NOO** | 由內建 SDK 提供當前與下一個轉彎、距離和有效路線區段，適合先核對導航引導與 ATC。 |
+| 雙區投屏、自動恢復 | 各區「⋯」選 App；拖曳分隔線，記憶橫直向比例；已授權且服務可用時嘗試自動啟動 |
+| 獨立返回、重開、收合 | 各區選單「返回投屏 App／重新開啟」；下方面板可收合及恢復 |
+| 日夜模式與版面 | 沿用 wide.77 的畫面重建修正，重選同一 App 不必重建；裝置差異仍須確認 |
+| 常用地址與 Google 收藏 | 三組常用地址、最近導航、內建 NOO 搜尋；一般版高德鍵盤可切換位置 |
+| OSM 速限圓牌 | 顯示、隱藏、長按移動；無有效資料顯示「—」 |
+| 道路速限傳送 | TDX／OSM 獨立開關；只傳符合道路及方向配對的資料，衝突或過期撤銷 |
+| 神盾紅光 | 有效辨識到 500 m 內固定／移動測速時，App 四邊紅光；神盾語音由神盾提供，不宣稱已接入車端測速煞車 |
+| Amap2Tesla | 選「Amap2Tesla 僅投神盾」，在同網路瀏覽器輸入 App 提供的網址；與 comma 資料分開 |
+| 車況與快捷操作 | 分區一下方面板「切換」；顯示車速、橫縱向、授權及連線，操作須車端支援 |
+| 診斷與紀錄 | 「即時診斷 → 報告 → 開始記錄／匯出報告與事件 ZIP」；搭配同時段 C4 Log |
 
-Carrot 的轉向、變道與車外方向燈各有車型、硬體和設定條件。各來源的資料前提和官方／測試分支的差異見[導航輔助（NOO）比較](docs/FEATURES_zh-TW.md#導航輔助noo比較)。
+## wide.85 新增了什麼
 
-## 其他功能
+| 版本 | 主要變更 |
+| --- | --- |
+| wide.78–79 | 舊有高德及三來源轉彎預調資料配套，車端仍依原有策略與限制 |
+| wide.80–83 | 投屏啟動掛點、等待授權與自動重連；83 保留兩區共用流程 |
+| wide.82 | 高德出口名稱、方向、路段及車道原始資料（僅顯示） |
+| wide.84 | 總路程、剩餘路程、時間及新版轉向圖示原始欄位 |
+| **wide.85** | 新增導航觀察資料版本、工作階段識別碼、樣本序號；來源切換／中斷後重設，方便 App ZIP 與 C4 Log 比對 |
 
-| 功能 | 能做到什麼 | 操作入口 |
+wide.85 的觀察 ID **不是**已確認的路線 ID、交流道事件 ID 或匝道完成訊號。不依未知數字圖示推測方向，不提供新的速度或轉向命令。[完整更新紀錄](CHANGELOG.md) · [wide.85 來源與驗證](docs/WIDE85_zh-TW.md)
+
+## 搭配 comma 與外接 HUD
+
+| 搭配方式 | 適合用途 | 入口 |
 | --- | --- | --- |
-| 分區投屏 | 分區一放神盾／其他 App／時鐘；分區二放地圖 | 各區「⋯」選單 |
-| 比例與橫直向適配 | 拖曳後適配投屏，橫直向比例分別保存 | 分隔線或「版面與比例設定」 |
-| 返回、重啟與收合 | 各區分別返回 App、重新開啟；下方面板可收合 | 選單第一項「返回投屏 App」；「⌄」及「⋯ → 展開面板」 |
-| 車況與即時診斷 | comma 車速、橫／縱向狀態、投屏授權與導航通道狀態 | 分區一下方面板「切換 → 即時診斷」 |
-| 操作面板 | 原有快捷操作；車端相關項目依連線及支援生效 | 分區一下方面板「切換」 |
-| 常用地址 | 三組名稱／地址，點選開啟、長按編輯；必要時複製貼上 | 「三個常用地址」 |
-| Google 收藏與最近導航 | 快速重選目的地，結束導航回到搜尋頁 | Google NOO 搜尋畫面 |
-| 高德一般版鍵盤 | 切到導航區或裝置主畫面 | 分區二選單的鍵盤選項 |
-| OSM 速限牌 | 顯示、隱藏、長按移動；無資料顯示「—」 | 「顯示 OSM 速限牌」 |
-| 道路速限傳送 | 獨立決定是否送已確認的 TDX／OSM 速限到 comma | 設定中的「傳送道路速限」開關 |
-| 神盾紅光 | 辨識到 500 公尺內固定／移動測速後，App 四邊閃紅光 | 「神盾紅光提醒、取樣與尺寸保護」；需足夠視窗尺寸 |
-| Amap2Tesla | 讓另一裝置的瀏覽器顯示神盾投屏 | 「Amap2Tesla 僅投神盾」；輸入 App 顯示的完整網址 |
-| 記錄與匯出 | 分享診斷、開始記錄、匯出報告與事件 ZIP | 「即時診斷 → 報告」；分享前檢查位置與路線資料 |
+| 只用 Android | 地圖、神盾、分割投屏 | 不用改 comma |
+| 官方 Carrot | 已支援的 Navi v2、ATC、速限及彎速；依官方版本設定 | [官方 carrot-wip](https://github.com/ajouatom/openpilot/tree/carrot-wip) |
+| 獨立 Test | 個人導航接收、路線配對、OSM 彎速與 HUD 配套 | [分支](https://github.com/FANHAOHSIANG/openpilot-carrot/tree/test/carrot-wip-upstream-20261104) |
+| Tony 融合 Test | 融合 Tony／Carrot 及個人導航 HUD 配套；不同控制選項須另核對 | [分支](https://github.com/FANHAOHSIANG/openpilot-carrot/tree/test/tony-carrot-wip-integrated-20261117) |
+| C4 USB 直連 TURZX | 不需要 Mac；支援相容 HUD 與資料 | [HUD 設定](docs/HUD_zh-TW.md) |
+| Mac Jetlink HUD | 用相容 Jetlink 與 Mac HUD 轉送 | [CarrotMacHUD](https://github.com/FANHAOHSIANG/carrotMAC-HUD) |
 
-[完整功能手冊](docs/FEATURES_zh-TW.md) 說明各功能的前提與限制。儲存庫中的歷史台灣測速版本仍保留，不能把歷史功能清單直接套在 wide.70。
+兩個 Test 分支已納入 wide.85 觀察識別碼接收。導航模式 6 的標題區可顯示有效高德出口名稱、明確方向文字及格式化剩餘路程；並非每個行車模式都顯示。紅綠燈、測速、道路速限、導航距離及車況仍依資料源和畫面模式。Mac 沿用現有 Jetlink；新 Swift 依賴下載憑證問題尚未解決。
 
-## 外接 HUD 會顯示什麼？
+> [!WARNING]
+> 個人 Test 分支是滾動開發，不是 comma 原廠正式車控版本。可能非預期減速、偏移或退出控制。實機前先核對車型、線束與既有設定，保留已知可用版本；不以新版 App 作為提高轉向權限或修改安全限制的理由。
 
-相容的 TURZX 可直連 comma，或透過相容的 Mac Jetlink 與 CarrotMacHUD 轉送。常用畫面有車速、檔位、道路速限、巡航、3D 車道與前車距離，另有導航轉彎、P 檔行程、R 檔估算軌跡與系統資訊。各地圖會送哪些提示、高德倒數和測速牌會出現在哪裡，可查[外接 HUD 畫面與功能](docs/HUD_zh-TW.md)。
+[分支比較](docs/C4_BRANCHES_zh-TW.md) · [官方設定說明](docs/CARROT_SETTINGS_zh-TW.md) · [測試分支安裝及回復](docs/C4_TEST_INSTALL_zh-TW.md)
 
-使用官方 Carrot 和 USB 直連 HUD 時，可從 `ClusterHud=1`、`ClusterHudScreenMode=0` 開始。接好地圖後，先確認轉彎和距離收件，再決定要不要開啟轉彎減速、道路速限與彎速功能。各項位置、設定值及建議順序見[官方 Carrot 設定建議](docs/CARROT_SETTINGS_zh-TW.md)。
+## 常見問題
 
-## 搭配官方或測試分支的體驗
+| 問題 | 先檢查 |
+| --- | --- |
+| 還要按「啟動投屏」？ | 確認 Stellar／Shizuku 服務與授權仍有效、兩區已選 App；若仍需手動，記錄車機型號與 ZIP |
+| 看得到地圖但 C4 沒導航？ | 地圖是否為僅投屏模式、選定來源是否真的導航、Navi v2 收件與網路是否正常 |
+| HUD 沒有新增出口資訊？ | 使用高德車機版、有有效廣播、更新對應 C4／Mac HUD，查看模式 6；過期或未知值不顯示 |
+| PRE 一直在／巡航忽快忽慢？ | 新版控速尚未啟用，保留原車控並回報同一行程資料，勿為測試刻意重現危險情境 |
+| APK 安裝衝突？ | 核對 Android 12+、完整 APK 與原簽章；不要任意刪除舊 App 資料 |
+| 如何回報？ | App 版本、地圖版本、車機型號、comma 分支／提交、發生時間；停車匯出 ZIP 及同次 C4 Log，分享前檢查位置與帳密 |
 
-此處「官方」指 **ajouatom 的 Carrot `carrot-wip`**，並非 comma.ai 原版 openpilot。比較核對於 **2026-11-15**；官方 `carrot-wip` 本身也是滾動開發分支。
+## 完整文件
 
-| 項目 | 官方 Carrot `carrot-wip` | 個人 `test/carrot-wip-upstream-20261104` |
-| --- | --- | --- |
-| App 投屏、Google 搜尋、神盾畫面 | 可獨立使用，不要求換 comma 分支 | 相同 |
-| Navi v2 引導與轉彎減速 | 有接收與 ATC 路徑，需有效資料、設定及車型支援 | 保留相同基礎功能 |
-| 路線彎速 | 有既有路線曲率處理 | 加入定位、方向、近端視覺配對與彎道上限釋放修正 |
-| 高德 Link 長路線 | 核對版本的接收／控制解析最多保留 256 點 | 最多完整保留 4,096 點，超限或座標無效撤銷 |
-| 高速直線短折返誤減速 | 核對版本的原有曲率算法 | 已合併特定短折返修正，實車反應待驗證 |
-| 無目的地的 OSM 彎速預覽 | 未見本專案這套離線 OSM 預覽模組 | 有全台圖資下載與速度預覽，需圖資、道路配對及對應設定 |
-| 外接 HUD | 有駕駛、行程、系統、導航、P／R 檔等畫面 | 另有繁中和高德三燈／測速提醒配套。手機倒數需配套 App 輸出 |
-| HUD 導航藍線 | 依現有路線、模型及 HUD 管線 | 穩定修正 [PR #41](https://github.com/FANHAOHSIANG/openpilot-carrot/pull/41) 核對時仍為草稿、未合併 |
-
-**官方也能使用有效導航資料，測試分支主要增加配套與修正。** 接到轉彎提示不等於車輛一定轉彎；畫面方向指示也不等於車外方向燈能點亮。[設定、硬體條件與驗證層級](docs/C4_BRANCHES_zh-TW.md)
-
-## comma four 測試分支安裝短網址
-
-在 **comma four 的 Custom software／自訂軟體 URL** 畫面輸入：
-
-```text
-https://da.gd/cb-test
-```
-
-**這是測試分支，請小心使用。** 此短網址限 **comma four（MICI）**，安裝 `FANHAOHSIANG/openpilot-carrot` 的 `test/carrot-wip-upstream-20261104` 最新內容。已核對下載檔，實機安裝、首次開機及車輛驗收待確認。C3、C3X 可搭配已安裝的相容 Carrot 使用 App。請先閱讀[完整安裝步驟、備用長網址與回復方式](docs/C4_TEST_INSTALL_zh-TW.md)。
-
-## 第一次使用
-
-1. 停車後安裝 APK、目標地圖及投屏工具；啟動 Stellar／Shizuku，再回 App 授權。
-2. 「分區二 ⋯」選地圖；「分區一 ⋯ → 選擇投屏 App／空白畫面」選神盾、其他 App 或時鐘。
-3. Google NOO 先完成 [金鑰設定](docs/GOOGLE_SDK_zh-TW.md)；高德則在對應 App 內設目的地並開始導航。
-4. 要連 comma，讓兩端網路互通並設定 comma 位址。依序核對 App 引導、Navi v2 與 comma 接收。畫面和減速分別確認，參考[官方設定建議](docs/CARROT_SETTINGS_zh-TW.md)。
-5. 要試個人分支，先閱讀[測試提醒、安裝入口與回復方式](docs/C4_TEST_INSTALL_zh-TW.md)。只用投屏可直接在 Android 操作。
-
-[更新紀錄](CHANGELOG.md) · [wide.77 驗證範圍](variants/wide77/README.md) · [開發與重建](docs/BUILD_zh-TW.md) · [資料來源與授權](docs/DATA_SOURCES_zh-TW.md)
+[功能手冊](docs/FEATURES_zh-TW.md) · [安裝與排錯](docs/INSTALL_zh-TW.md) · [HUD](docs/HUD_zh-TW.md) · [C4 分支](docs/C4_BRANCHES_zh-TW.md) · [版本說明](docs/WIDE85_zh-TW.md) · [更新紀錄](CHANGELOG.md) · [開發與重建](docs/BUILD_zh-TW.md) · [資料來源及授權](docs/DATA_SOURCES_zh-TW.md)
 
 上游專案、第三方 App 與圖資各自沿用原有授權。[Stellar 與 Shizuku 授權](third_party/projection/README.md#版本與校驗)

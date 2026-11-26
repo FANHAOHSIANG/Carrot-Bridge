@@ -1,5 +1,7 @@
 # 外接 HUD 畫面與功能
 
+> 2026-11-26：wide.85 配套已合併兩個 Test 分支，Mac HUD 亦有對應更新。新增高德車機出口名稱、明確方向文字與格式化剩餘路程，目前接入導航模式 6 的標題區；未知／過期資料不顯示。不改巡航控制。詳見 [wide.85 配套](WIDE85_zh-TW.md)。Mac 沿用已安裝的 Jetlink，完整 Swift 新建置受 ONNX 下載站憑證阻擋。以下原有畫面位置是歷史基準，依實際 HUD 版本為準。
+
 [回首頁](../README.md) · [官方設定建議](CARROT_SETTINGS_zh-TW.md) · [官方與測試分支比較](C4_BRANCHES_zh-TW.md)
 
 TURZX 外接 HUD 會顯示 comma 的車況、駕駛輔助狀態及收到的導航提示。以 1920 × 462 橫向畫面為例，預設左側是車道和車況，右側有導航時顯示引導，無導航時切回行程摘要。Carrot Bridge 的地圖和神盾投屏繼續在 Android 車機或手機上操作。
@@ -49,12 +51,12 @@ HUD 在 comma 已進入行車狀態且取得檔位時會切換 P／R 專用畫�
 | 來源 | 可顯示的內容與前提 |
 | --- | --- |
 | **高德車機版** | 收到有效欄位時顯示轉彎、距離和道路資訊。相符的版本送來確認的直行燈態或執法資料時，測試分支能顯示號誌秒數、測速限速和剩餘距離。 |
-| **高德一般版** | Link 授權與導航有效時可提供轉彎、距離、道路名和選定路線。中性號誌倒數需 wide.71 的對應輸出，已發布的 wide.70 尚無這項輸出。手機版測速封包仍待驗證。 |
+| **高德一般版** | Link 授權與導航有效時可提供轉彎、距離、道路名和選定路線。中性號誌倒數需來源確實輸出、配套 C4 與 HUD；wide.85 實際相容性仍依資料確認。手機版測速封包仍待驗證。 |
 | **Google 導航 NOO** | 可用的 SDK 引導可顯示轉彎、下一步、距離和道路資訊。路線座標可供接收端使用，地圖影像及號誌／測速欄位需有對應的來源。 |
 | **Google 地圖（僅投屏）** | Google Maps 畫面留在 Android 分區。HUD 保有 comma 車況，轉彎引導需選用有導航資料輸出的來源。 |
-| **TDX／OSM 和神盾** | App 開啟道路速限傳送且 comma 收到有效值時，HUD 可顯示道路速限。wide.70 的神盾紅光與語音提醒留在 Android。 |
+| **TDX／OSM 和神盾** | App 開啟道路速限傳送且 comma 收到有效值時，HUD 可顯示道路速限。神盾紅光與語音提醒留在 Android。 |
 
-行駛畫面的線是模型預測的路徑。導航地圖的路線需要地圖媒體或官方導航模型預覽。Carrot Bridge 傳送的路線座標可用於導航資料處理，HUD 地圖畫面依收到的媒體決定。目前外部導航路線疊到駕駛路徑的穩定修正仍在草稿 PR。〔[導航資料與影像格式](https://github.com/ajouatom/openpilot/blob/baab16bb9666eb51a5047aaa586e4517c6155a40/openpilot/selfdrive/carrot/carrot_navi_api.md) · [HUD 藍線 PR #41](https://github.com/FANHAOHSIANG/openpilot-carrot/pull/41)〕
+行駛畫面的線是模型預測的路徑。導航地圖的路線需要地圖媒體或官方導航模型預覽。Carrot Bridge 傳送的路線座標可用於導航資料處理，HUD 地圖畫面依收到的媒體決定。外部導航藍線有歷史修正 PR；本次不宣稱全場景驗收完成。〔[導航資料與影像格式](https://github.com/ajouatom/openpilot/blob/baab16bb9666eb51a5047aaa586e4517c6155a40/openpilot/selfdrive/carrot/carrot_navi_api.md) · [HUD 藍線 PR #41](https://github.com/FANHAOHSIANG/openpilot-carrot/pull/41)〕
 
 ### 測試分支與 Mac HUD 的提醒位置
 

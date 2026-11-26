@@ -1,3 +1,5 @@
+> **目前 wide.85：** [精確發布版本與驗證](WIDE85_zh-TW.md) · [固定原始碼 tag](https://github.com/FANHAOHSIANG/Carrot-Bridge/tree/wide.85/variants/wide85) · [建置流程](https://github.com/FANHAOHSIANG/Carrot-Bridge/actions/runs/45754440065)。目前最新版本的可重建來源在 wide.85 tag／自動投屏整合分支；以下保留舊版歷史建置方式。原私鑰不進 GitHub，不用其他簽章替換已發布 APK。
+
 > [Carrot Bridge wide.70 建置與驗證](../variants/wide70/README.md)
 
 > wide.46 的完整重建步驟見 [variants/wide46](../variants/wide46/README.md)。`release/wide46/restore.py` 可從公開 wide.42 還原固定 wide.45 建置基底；[Google 配套](../variants/google-navdash/README.md) 為獨立 Gradle 專案，先執行 `prepare_resources.py` 恢復固定上游背景，再跑單元測試與 release build。以下為歷史版本的建置說明。

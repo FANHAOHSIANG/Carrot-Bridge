@@ -1,6 +1,6 @@
 # Carrot Bridge 功能與地圖操作手冊
 
-適用於目前發布的 **wide.70**，核對日 2026-11-15。[下載](../README.md#下載與需求) · [安裝](INSTALL_zh-TW.md) · [外接 HUD](HUD_zh-TW.md) · [官方設定建議](CARROT_SETTINGS_zh-TW.md) · [分支比較](C4_BRANCHES_zh-TW.md)
+適用於**wide.85**，更新日 2026-11-26；原有地圖與功能的基準核對日為 2026-11-15。[下載](../README.md#下載與需求) · [安裝](INSTALL_zh-TW.md) · [外接 HUD](HUD_zh-TW.md) · [官方設定建議](CARROT_SETTINGS_zh-TW.md) · [分支比較](C4_BRANCHES_zh-TW.md)
 
 ## App 在整套系統的位置
 
@@ -65,7 +65,7 @@ Carrot Bridge 使用 **導航輔助（NOO，Navigate on Openpilot）** 作為名
 | **高德一般版** | Link 授權和資料有效時，送當前轉彎、距離和路名。有相符的選定路線與下一步時，再送下一轉彎。 | 送出的是當前選定的高德路線。這次核對的官方接收上限為 256 點，個人測試分支最多接收 4,096 點。仍需核對實機路線與定位配對。 | 手機版測速與原生道路速限欄位未確認。可另外開啟 TDX／OSM 道路速限。手機號誌倒數需對應 App 版本。 |
 | **Google 導航 NOO** | 內建 SDK 送目前、下一個有效轉彎、距離與路名。已映射的左／右轉、分岔、匝道等引導可交給 Carrot 判讀。 | 路線版本與定位吻合時送出前方路線區段，可供相容 Carrot 計算彎速。 | 此整合目前提供引導與路線。道路速限可另用 TDX／OSM，Google 測速及號誌不列入目前支援。 |
 
-「Google 地圖（僅投屏）」適合看 Google Maps 畫面與聽語音。需要把 Google 的路口資料送到 comma 時，請選「Google 導航 NOO」。表格說明的是 wide.70 可交付的資料與已核對的 Carrot 接收能力。〔[高德 Link 路線驗證](../variants/wide56/SCHEMA.md) · [Google 資料轉換](../variants/google-bridge46/src/WideGoogleAdapter.java) · [官方與測試分支版本](C4_BRANCHES_zh-TW.md#核對版本)〕
+「Google 地圖（僅投屏）」適合看 Google Maps 畫面與聽語音。需要把 Google 的路口資料送到 comma 時，請選「Google 導航 NOO」。表格保留 wide.70 基準能力；wide.85 的新增欄位與配套見版本說明。〔[高德 Link 路線驗證](../variants/wide56/SCHEMA.md) · [Google 資料轉換](../variants/google-bridge46/src/WideGoogleAdapter.java) · [官方與測試分支版本](C4_BRANCHES_zh-TW.md#核對版本)〕
 
 ### 導航引導如何參與駕駛輔助
 
@@ -84,7 +84,7 @@ Carrot Bridge 使用 **導航輔助（NOO，Navigate on Openpilot）** 作為名
 3. 到設定開啟「神盾紅光提醒、取樣與尺寸保護」。
 4. 需至少 **757 × 384 像素**的辨識視窗及至少兩次一致取樣；辨識到 **500 公尺內**固定／移動測速時閃紅光，接近時加快、增亮。
 
-視窗太小、資訊被遮、辨識失敗或資料過期時不能保證有紅光。關閉開關可解除這項尺寸保護。**辨識目前僅供 App 畫面與診斷，未接入 wide.70 的 comma 測速減速出站流程。** 神盾本身的語音及其他提醒依該 App 運作。
+視窗太小、資訊被遮、辨識失敗或資料過期時不能保證有紅光。關閉開關可解除這項尺寸保護。**辨識目前僅供 App 畫面與診斷，未確認接入 wide.85 的 comma 測速減速出站流程。** 神盾本身的語音及其他提醒依該 App 運作。
 
 ## 道路速限與 OSM
 
@@ -96,6 +96,10 @@ Carrot Bridge 使用 **導航輔助（NOO，Navigate on Openpilot）** 作為名
 | comma 採用道路速限 | 在 comma 核對設定與接收資料 | App 開關與 comma 是否採用分開；只接受符合接收協議的值 |
 
 App 的 TDX／OSM 是**道路限速**；comma 的 `OsmCurveSpeedEnabled` 是**彎道速度預覽**，會在 comma 另外下載圖資。兩者不同開關、不同下載狀態；限速不是測速點清冊，也不代表已完整覆蓋全台每條道路。
+
+## wide.85 投屏與導航資料更新
+
+已授權、管理服務可用且分區已選 App 時，開啟 Carrot Bridge 會嘗試自動恢復投屏。首次授權及服務停止後的恢復仍需正常系統操作。新增高德出口、路線原始資料與觀察識別碼；作用是顯示及記錄，不是新的車控事件。詳見 [wide.85](WIDE85_zh-TW.md)。
 
 ## 畫面、快捷操作與常用地址
 
@@ -130,9 +134,10 @@ App 的 TDX／OSM 是**道路限速**；comma 的 `OsmCurveSpeedEnabled` 是**�
 
 ## 尚未宣稱完成
 
-- wide.70 神盾辨識 → comma 測速減速：未接入；高德一般版相機封包：未確認。
-- 高德手機倒數：comma 有後續配套，但 wide.70 發布內容不包含對應 wide.71 功能。
-- HUD 藍線穩定修正：核對時 PR #41 尚未合併。
+- 神盾辨識 → comma 測速減速：未確認接入；高德一般版相機封包：未確認。
+- 高德手機倒數需實際來源輸出及配套 C4／HUD，wide.85 真實封包覆蓋尚未完整核對。
+- HUD 藍線：PR #41 為歷史修正入口；本版未重新驗收全部路線場景。
+- 新版 PRE 匝道控速、線性升降速：尚未啟用。
 - 每個手機／車機、高德版本、道路與車型的實機驗收：未完成。
 
 依據：[wide.69](../variants/wide69/README.md)、[wide.70](../variants/wide70/README.md)、[高德路線](../variants/wide56/SCHEMA.md)、[Google 轉換器](../variants/google-bridge46/src/WideGoogleAdapter.java)、[comma 核對資料](C4_BRANCHES_zh-TW.md#核對依據)。歷史目錄請依標示版本閱讀。
