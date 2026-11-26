@@ -1,42 +1,43 @@
-name: Inspect pinned projection startup
+name: wide83 automatic projection build
 on:
+  push:
+    branches: [feature/wide83-auto-resume-20261126]
+    paths: ['variants/wide79/**', 'variants/wide82/**', 'variants/wide83/**', '.github/workflows/wide83-inspect.yml']
   pull_request:
     branches: [feature/full-auto-projection-20261125]
-    paths: ['.github/workflows/wide83-inspect.yml']
+    paths: ['variants/wide83/**', '.github/workflows/wide83-inspect.yml']
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  inspect:
+  apk:
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
-      - name: Fetch pinned signed base and inspect startup methods
+      - name: Download pinned base and build dependencies
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release download wide.77 --pattern Carrot-Bridge-wide.77.apk --dir /tmp/base
-          echo '779c550c05ce5b59193f1c1b1a498e8f9b40f5d1eb27789514ab7ba14e51bc82  /tmp/base/Carrot-Bridge-wide.77.apk' | sha256sum -c
-          curl -fL --retry 3 https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar -o /tmp/apktool.jar
-          unzip -p /tmp/base/Carrot-Bridge-wide.77.apk classes.dex > /tmp/classes.dex
-          java -cp /tmp/apktool.jar variants/wide69/Dalvik.java decode /tmp/classes.dex /tmp/primary
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('/tmp/primary/com/navipilot/obf')
-          for name in ('WideReconnectPolicy','WideProjectionHelp','WideProjectionHelp$1','WideDirect','WideDirect$Pane'):
-              f=p/(name+'.smali')
-              if not f.exists(): continue
-              print('FILE',name)
-              import re
-              data=f.read_text()
-              print('\n'.join(l for l in data.splitlines() if l.startswith('.field')))
-              for m in re.finditer(r'(?ms)^\.method[^\n]*\n.*?^\.end method',data):
-                  sig=m.group().splitlines()[0]
-                  if name=='WideReconnectPolicy' or any(x in sig for x in ('attach','detach','schedule','watch','poll','start','onAttachedToWindow','connected','projectionReady','onDetachedFromWindow','onWindowFocusChanged','onResume','<init>','create','waiting','access$6','run()','stop','retry','auto')):
-                      print(m.group())
-          PY
+          curl --retry 5 --retry-delay 5 --retry-all-errors -fL https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar -o /tmp/apktool.jar
+          curl --retry 5 --retry-delay 5 --retry-all-errors -fL https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar -o /tmp/json.jar
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'build-tools;35.0.0'
+          log-accepted-android-sdk-licenses: 'false'
+      - name: Compile helpers, run checks and assemble APK
+        run: |
+          sdkmanager "build-tools;35.0.0"
+          python3 variants/wide83/build.py /tmp/base/Carrot-Bridge-wide.77.apk "$ANDROID_HOME/build-tools/35.0.0" /tmp/apktool.jar /tmp/json.jar /tmp/Carrot-Bridge-wide.83-unsigned.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wide83-unsigned-not-for-installation
+          path: /tmp/Carrot-Bridge-wide.83-unsigned.apk
+          retention-days: 7
