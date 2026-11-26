@@ -1,0 +1,2 @@
+# Draft: native Amap PRE containment
+Based on the full-auto projection branch. Temporarily suppress unbound native advisory export; shared navigation permission, TDX/OSM and SDI are not intentionally changed. This does not repair native ramp-speed semantics and no APK has been built or signed. Existing installed APK is unchanged. Validate real native event lifecycle (identity, distance, completion), existing build chain, all regression checks and vehicle-side compatibility before release. No road deployment.

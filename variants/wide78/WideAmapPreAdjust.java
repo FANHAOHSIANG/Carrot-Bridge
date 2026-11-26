@@ -34,14 +34,10 @@ public final class WideAmapPreAdjust {
         try {
             JSONObject result = new JSONObject(merged.toString());
             result.remove(KEY); result.remove(AT); result.remove("pre_adjust");
-            int target = original == null ? -1 : original.optInt(KEY, -1);
-            long at = original == null ? 0 : original.optLong(AT, 0);
-            if (at > 0 && now >= at && now - at < 2000 && valid(target)
-                    && original.optInt("road_limit_kph", -1) == target
-                    && WideAmapSource.preAdjustAllowed(at)) {
-                result.put("pre_adjust", new JSONObject().put("source", "amap_auto")
-                        .put("target_kph", target).put("generated_at_ms", at));
-            }
+            // The legacy native policy exposes only a target and timestamp.
+            // Neither identifies the maneuver or proves that it is still ahead.
+            // Do not export this unbound advisory until its lifecycle is verified.
+            // The independent shared-navigation permission is untouched.
             // WideOsmLimit continues to replace road_limit_kph using confirmed TDX/OSM.
             return result.length() == 0 ? null : result;
         } catch (Exception error) { return null; }

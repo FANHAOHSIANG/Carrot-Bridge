@@ -7,6 +7,9 @@ public final class SharedChecks {
   for(String source:new String[]{"amap_auto","amap_phone","google_noo"}){
    JSONObject input=new JSONObject().put("guidance_active",true).put("off_route",false);
    check(WideSharedPreAdjust.status(input,source,100,1000,1500,true).getJSONObject("pre_adjust_control").getString("source").equals(source));
+   JSONObject permission=WideSharedPreAdjust.status(input,source,100,1000,1500,true).getJSONObject("pre_adjust_control");
+   check(permission.getInt("protocol_version")==2);
+   check(permission.getString("scope").equals("turn_only"));
    check(!input.has("pre_adjust_control"));
    check(!WideSharedPreAdjust.status(input,source,100,1000,1500,false).has("pre_adjust_control"));
    check(!WideSharedPreAdjust.status(input,source,100,1000,3000,true).has("pre_adjust_control"));

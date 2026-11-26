@@ -24,7 +24,8 @@ public final class WideSharedPreAdjust {
    if(enabled && ("amap_auto".equals(source)||"amap_phone".equals(source)||"google_noo".equals(source))
       && Boolean.TRUE.equals(value.opt("guidance_active"))&&!value.optBoolean("off_route",false)
       && generated>0&&generated>=selectedAt&&now>=generated&&now-generated<2000) {
-    result.put("pre_adjust_control",new JSONObject().put("source",source).put("enabled",true).put("generated_at_ms",generated));
+    result.put("pre_adjust_control",new JSONObject().put("source",source).put("enabled",true).put("generated_at_ms",generated)
+       .put("protocol_version",2).put("scope","turn_only"));
    }
    return result;
   }catch(Exception invalid){return null;}
