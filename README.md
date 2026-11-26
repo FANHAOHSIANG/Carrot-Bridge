@@ -4,7 +4,11 @@
 
 整合高德車機版、高德一般版、Google 地圖投屏與內建 Google 導航 NOO。可單獨當分割畫面使用，也可連接 **C3、C3X 或 comma four**，提供轉彎引導、路線及已確認的道路速限。comma 須使用支援 Carrot Navi v2 的 Carrot 版本。車輛是否採用資料，取決於分支、設定、模型及車型支援。
 
-**[下載最新版 wide.77 正式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.77/Carrot-Bridge-wide.77.apk)** · **[完整功能手冊](docs/FEATURES_zh-TW.md)** · **[安裝與操作](docs/INSTALL_zh-TW.md)** · **[官方設定建議](docs/CARROT_SETTINGS_zh-TW.md)** · **[外接 HUD](docs/HUD_zh-TW.md)** · **[分支比較](docs/C4_BRANCHES_zh-TW.md)** · **[測試分支安裝](docs/C4_TEST_INSTALL_zh-TW.md)**
+**[下載 wide.83 原簽章自動投屏更新](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.83/Carrot-Bridge-wide.83.apk)** · [wide.83 發布說明](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/tag/wide.83)
+
+wide.83 已通過 APK 建置、原簽章驗證及 SHA-256 核對。保留上次投屏選擇，改由有效投屏區在 App 開啟後自動啟動原投屏回呼；管理服務須可用，首次授權仍須使用者同意。支援高德車機出口資料傳輸與配套 C4／HUD 顯示。尚未實機確認自動投屏，不含新版 PRE 控速或線性升降速修改。原有實機驗收版 wide.77 仍可下載。
+
+**[下載已實機驗收的 wide.77 正式 APK](https://github.com/FANHAOHSIANG/Carrot-Bridge/releases/download/wide.77/Carrot-Bridge-wide.77.apk)** · **[完整功能手冊](docs/FEATURES_zh-TW.md)** · **[安裝與操作](docs/INSTALL_zh-TW.md)** · **[官方設定建議](docs/CARROT_SETTINGS_zh-TW.md)** · **[外接 HUD](docs/HUD_zh-TW.md)** · **[分支比較](docs/C4_BRANCHES_zh-TW.md)** · **[測試分支安裝](docs/C4_TEST_INSTALL_zh-TW.md)**
 
 > [!WARNING]
 > `test/carrot-wip-upstream-20261104` 是持續變動的個人測試分支，請小心使用。可能發生非預期減速、路線偏差、功能失效或退出控制。請停車設定，先確認車型與線束支援、保留回復方法，駕駛全程注意道路並隨時接管。離線測試通過不等於實車驗收，不能依賴 App 或測試分支自動完成路口轉彎。
