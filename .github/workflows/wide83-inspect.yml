@@ -37,6 +37,6 @@ jobs:
               print('\n'.join(l for l in data.splitlines() if l.startswith('.field')))
               for m in re.finditer(r'(?ms)^\.method[^\n]*\n.*?^\.end method',data):
                   sig=m.group().splitlines()[0]
-                  if name=='WideReconnectPolicy' or any(x in sig for x in ('watch','poll','start','onAttachedToWindow','connected','projectionReady','onDetachedFromWindow','onWindowFocusChanged','onResume','run()','stop','retry','auto')):
+                  if name=='WideReconnectPolicy' or any(x in sig for x in ('attach','detach','schedule','watch','poll','start','onAttachedToWindow','connected','projectionReady','onDetachedFromWindow','onWindowFocusChanged','onResume','<init>','create','waiting','access$6','run()','stop','retry','auto')):
                       print(m.group())
           PY
