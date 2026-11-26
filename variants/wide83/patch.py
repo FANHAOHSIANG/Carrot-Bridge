@@ -148,3 +148,12 @@ def restore_projection(primary):
 def apply(primary):
     _base.apply(primary)
     restore_projection(primary)
+    # "Open manager on launch" controls launching the external manager, not
+    # reconnecting an already-running manager. Keep the normal one-shot Android
+    # consent request available when a real projection pane needs it.
+    policy = primary / PACKAGE / "WideReconnectPolicy.smali"
+    text = policy.read_text()
+    guard = "    if-eqz p8, :wide81_normal_authorized_reconnect\n"
+    if text.count(guard) != 1:
+        raise ValueError("Unexpected existing permission policy")
+    policy.write_text(text.replace(guard, "", 1))
