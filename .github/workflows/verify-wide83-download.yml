@@ -1,0 +1,20 @@
+name: Verify published wide83 download
+on:
+  pull_request:
+    branches: [main]
+    paths: ['README.md','.github/workflows/verify-wide83-download.yml']
+permissions:
+  contents: read
+jobs:
+  download:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Verify actual published release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/released
+          gh release download wide.83 --repo "$GITHUB_REPOSITORY" --pattern Carrot-Bridge-wide.83.apk --dir /tmp/released
+          echo '38e246a0d297cde2c0883b7a18821a44b260ffb180822246492e0090fc6a4a9a  /tmp/released/Carrot-Bridge-wide.83.apk' | sha256sum -c -
