@@ -1,0 +1,40 @@
+name: Auto-restore previous projection build
+on:
+  push:
+    branches: [feature/auto-restore-last-projection-20261124]
+    paths: ['variants/wide79/**', 'variants/wide80/**', '.github/workflows/auto-restore-projection.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Download pinned base and build dependencies
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download wide.77 --pattern Carrot-Bridge-wide.77.apk --dir /tmp/base
+          curl --retry 5 --retry-delay 5 --retry-all-errors -fL https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar -o /tmp/apktool.jar
+          curl --retry 5 --retry-delay 5 --retry-all-errors -fL https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar -o /tmp/json.jar
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'build-tools;35.0.0'
+          log-accepted-android-sdk-licenses: 'false'
+      - name: Compile helpers, run checks and assemble APK
+        run: |
+          sdkmanager "build-tools;35.0.0"
+          python3 variants/wide80/build.py /tmp/base/Carrot-Bridge-wide.77.apk "$ANDROID_HOME/build-tools/35.0.0" /tmp/apktool.jar /tmp/json.jar /tmp/Carrot-Bridge-wide.80-unsigned.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wide80-unsigned-not-for-installation
+          path: /tmp/Carrot-Bridge-wide.80-unsigned.apk
+          retention-days: 7
