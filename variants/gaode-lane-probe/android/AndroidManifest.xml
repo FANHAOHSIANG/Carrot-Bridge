@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="tw.carrot.gaodeprobe" android:versionCode="1" android:versionName="0.1-link-observe">
+<uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+<queries><package android:name="com.autonavi.minimap"/></queries>
+<application android:label="GaodeProbe Test" android:allowBackup="false" android:theme="@android:style/Theme.Material.Light.NoActionBar">
+<activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity>
+<service android:name=".CaptureService" android:foregroundServiceType="dataSync" android:exported="false"/>
+</application></manifest>
