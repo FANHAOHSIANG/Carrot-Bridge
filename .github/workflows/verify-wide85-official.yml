@@ -1,0 +1,24 @@
+name: Verify wide85 official publication
+on:
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/verify-wide85-official.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Confirm latest release status and original APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release view wide.85 --repo "$GITHUB_REPOSITORY" --json tagName,isDraft,isPrerelease,url,assets --jq '{tagName,isDraft,isPrerelease,url,assets:[.assets[].name]}'
+          gh release view wide.85 --repo "$GITHUB_REPOSITORY" --json tagName,isDraft,isPrerelease --jq '(.tagName == "wide.85" and .isDraft == false and .isPrerelease == false)' | grep -Fx true
+          gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq '.tagName' | grep -Fx wide.85
+          mkdir -p /tmp/wide85
+          gh release download wide.85 --repo "$GITHUB_REPOSITORY" --pattern Carrot-Bridge-wide.85.apk --dir /tmp/wide85
+          echo '344ae6f633a70e92923b627e664e927fda714dca37e8e098e21004ec94a33483  /tmp/wide85/Carrot-Bridge-wide.85.apk' | sha256sum -c -
+          echo 'PASS: wide.85 is Latest, not prerelease, exact original APK preserved.'
