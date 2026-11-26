@@ -11,9 +11,9 @@ public final class WideAmapExitInfo {
     private static final long TTL_MS = 2000L, MATCH_MS = 500L;
     private static final String FIELD = "amap_exit_info";
     private static final String[] TEXT = {"EXIT_NAME_INFO", "EXIT_DIRECTION_INFO", "SEG_REMAIN_DIS_AUTO",
-        "CUR_ROAD_NAME", "NEXT_ROAD_NAME"};
+        "CUR_ROAD_NAME", "NEXT_ROAD_NAME", "ROUTE_REMAIN_DIS_AUTO", "ROUTE_REMAIN_TIME_AUTO"};
     private static final String[] NUMBER = {"SEG_REMAIN_DIS", "CUR_SEG_NUM", "CUR_POINT_NUM",
-        "ROAD_TYPE", "ICON", "CAR_DIRECTION"};
+        "ROAD_TYPE", "ICON", "CAR_DIRECTION", "NEW_ICON", "ROUTE_REMAIN_DIS", "ROUTE_ALL_DIS", "ROUTE_REMAIN_TIME"};
     private static final class Sample {
         final JSONObject data;
         final long wall, nano;
