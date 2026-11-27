@@ -1,0 +1,1 @@
+package com.navipilot.obf; import org.json.JSONObject; public class WideBridgeLog {static boolean enabled;static int events;static JSONObject last;public static boolean recording(){return enabled;} public static void event(String type,Object value){events++;last=(JSONObject)value;}}
