@@ -11,7 +11,7 @@ public final class AutoChecks {
         b.putByteArray("EXTRA_DRIVE_WAY",new byte[]{-1,0,1});
         b.putString("EXTRA_TOKEN","hidden");
         JSONObject d=WideAutoObservation.decode(b),p=d.getJSONObject("payload"), j=p.getJSONObject("EXTRA_DATA");
-        ok(p.getInt("KEY_TYPE")==13012,"key");ok(j.getInt("laneCount")==4,"lane");
+        ok(WideAutoObservation.privateKey("poiName"),"redact POI");ok(!WideAutoObservation.privateKey("routePointlist"),"retain route points");ok(p.getInt("KEY_TYPE")==13012,"key");ok(j.getInt("laneCount")==4,"lane");
         ok(j.getJSONArray("routePointlist").getJSONObject(0).getDouble("lat")==24.0,"route");
         ok(p.getJSONArray("EXTRA_DRIVE_WAY").getInt(0)==255,"unsigned byte");
         ok(!d.toString().contains("secret")&&!d.toString().contains("hidden")&&!d.toString().contains("private"),"privacy");

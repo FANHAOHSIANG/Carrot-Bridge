@@ -36,7 +36,7 @@ public final class WideAutoObservation {
     }
     static boolean privateKey(String key) {
         String k=key.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]","");
-        return k.matches(".*(token|secret|password|credential|signature|cookie|authorization|apikey|aeskey|sessionid|deviceid|serialnumber|phone|email|address|account|userid|username|poi|destination|origin|home|workplace).*")
+        return k.matches(".*(token|secret|password|credential|signature|cookie|authorization|apikey|aeskey|sessionid|deviceid|serialnumber|phone|email|address|account|userid|username|poi(?!nt)|destination|origin|home|workplace).*")
             || k.matches("key|nonce|iv|uid|imei|imsi|mac|androidid");
     }
     static boolean candidate(String key){
