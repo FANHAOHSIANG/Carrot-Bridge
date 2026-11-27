@@ -39,3 +39,15 @@ jobs:
             /tmp/Carrot-Bridge-wide.88-unsigned.apk
             /tmp/wide88-unsigned-SHA256SUMS.txt
           if-no-files-found: error
+      - name: Preserve public Android SDK signing tool for local signing
+        run: |
+          set -euo pipefail
+          cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" /tmp/apksigner.jar
+          cd /tmp && sha256sum apksigner.jar > apksigner-SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wide88-public-sdk-apksigner
+          path: |
+            /tmp/apksigner.jar
+            /tmp/apksigner-SHA256SUMS.txt
+          if-no-files-found: error
