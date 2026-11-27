@@ -26,8 +26,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release download wide.87 --pattern Carrot-Bridge-wide.87.apk --dir /tmp/base
-          curl -fL --retry 3 https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar -o /tmp/apktool.jar
-          curl -fL --retry 3 https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar -o /tmp/json.jar
+          curl -fL --retry 5 --retry-delay 5 --retry-all-errors https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar -o /tmp/apktool.jar
+          curl -fL --retry 5 --retry-delay 5 --retry-all-errors https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar -o /tmp/json.jar
       - name: Build and test passive observation
         run: |
           python3 variants/wide88/build.py /tmp/base/Carrot-Bridge-wide.87.apk "$ANDROID_HOME/build-tools/35.0.0" "$ANDROID_HOME/platforms/android-35/android.jar" /tmp/apktool.jar /tmp/json.jar /tmp/Carrot-Bridge-wide.88-unsigned.apk
