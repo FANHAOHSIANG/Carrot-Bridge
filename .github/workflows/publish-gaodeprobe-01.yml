@@ -1,0 +1,29 @@
+name: Publish verified GaodeProbe 0.1 test APK
+on:
+  push:
+    branches: [test/gaode-lane-probe]
+    paths: ['.github/workflows/publish-gaodeprobe-01.yml']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: FANHAOHSIANG/Carrot-Bridge
+    steps:
+      - name: Download and validate existing successful build artifact
+        run: |
+          set -euo pipefail
+          gh api repos/$GH_REPO/actions/runs/45879309561 --jq '.conclusion + " " + .head_sha' | grep -Fx 'success e67740ac23a67f213744b720b93c62bfd3e66cb1'
+          gh api repos/$GH_REPO/actions/artifacts/15145947544/zip > artifact.zip
+          echo '84142f521eee7e6be490d42ba92ef442c597555f0ffa49b186200fd308e3184c  artifact.zip' | sha256sum -c -
+          unzip -q artifact.zip -d release
+          cd release
+          sha256sum -c SHA256SUMS.txt
+          test -s GaodeProbe-0.1-link-test.apk
+      - name: Publish as pre-release, never latest
+        run: |
+          set -euo pipefail
+          gh release create gaodeprobe-0.1-link-test release/GaodeProbe-0.1-link-test.apk release/SHA256SUMS.txt --target e67740ac23a67f213744b720b93c62bfd3e66cb1 --title 'GaodeProbe 0.1 Link Test' --prerelease --latest=false --notes '獨立 Android 資料採集測試版，沿用已驗章成功的原始 CI 產物（run 45879309561）。僅觀察高德已授權的 Link 事件；不修改高德或 Carrot Bridge 正式版，不控制車輛。尚未完成實機授權、高精度定位與車道中心線驗證。停車操作採集與匯出 JSONL。'
