@@ -12,23 +12,25 @@ import org.json.*;
 public final class WideAutoObservation {
     private static final int MAX_NODES=18000, MAX_CHARS=360000, MAX_TEXT=220000;
     private static long window=-1;
-    private static int count;
+    private static int count, rateDropped;
     public static synchronized void capture(Intent i) {
         try {
             if(!WideBridgeLog.recording() || i==null ||
                !"AUTONAVI_STANDARD_BROADCAST_SEND".equals(i.getAction())) return;
             long now=SystemClock.elapsedRealtime(), second=now/1000;
             if(second!=window){window=second;count=0;}
-            if(++count>12)return;
+            if(++count>12){rateDropped++;return;}
             Bundle b=i.getExtras();
             if(b==null)return;
             JSONObject data=decode(b);
             data.put("source","amap_auto").put("action",i.getAction())
                 .put("receipt_mono_ms",now).put("control_input",false)
                 .put("coordinate_reference","unverified").put("schema",1)
-                .put("sender_verification","existing_source_filter");
+                .put("sender_verification","existing_source_filter")
+                .put("rate_limited_since_last_record",rateDropped);
+            rateDropped=0;
             WideBridgeLog.event("amap_auto_packet",data);
-        } catch(RuntimeException | JSONException | LinkageError ignored) {
+        } catch(Exception | LinkageError ignored) {
             // Diagnostic faults must not block the existing receiver.
         }
     }
@@ -42,7 +44,7 @@ public final class WideAutoObservation {
         return !privateKey(key) && k.matches(".*(lane|route|path|point|segment|link|road|lat|lon|lng|coord|geometry|curve|curvature|horizon|adas|position|location|match|topo|hud|guide|driv[e]?way|exit|direction|traffic|speed|dist|remain|bearing|heading|accuracy|longitude|latitude|altitude|maneuver|icon|tbt|json|payload).*|keytype|type|datatype|eventtype|data|extradata|extra|result|status|x|y|z|id");
     }
     static boolean textAllowed(String key){
-        return key.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]","").matches(".*roadname|exitnameinfo|exitdirectioninfo|seg remaindisauto|routeremaindisauto|routeremaintimeauto|extradriveway|direction|type|status");
+        return key.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]","").matches(".*roadname|exitnameinfo|exitdirectioninfo|segremaindisauto|routeremaindisauto|routeremaintimeauto|extradriveway|direction|type|status");
     }
     static JSONObject decode(Bundle b)throws JSONException{
         JSONObject payload=new JSONObject(), types=new JSONObject();
