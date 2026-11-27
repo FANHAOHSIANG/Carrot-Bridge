@@ -1,0 +1,41 @@
+name: wide88 AMap Auto route probe build
+on:
+  push:
+    branches: [test/wide88-amapauto-route-probe]
+    paths: ['variants/wide88/**','.github/workflows/wide88-observation.yml']
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-35 build-tools;35.0.0'
+          log-accepted-android-sdk-licenses: 'false'
+      - name: Download pinned base and dependencies
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download wide.87 --pattern Carrot-Bridge-wide.87.apk --dir /tmp/base
+          curl -fL --retry 3 https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar -o /tmp/apktool.jar
+          curl -fL --retry 3 https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar -o /tmp/json.jar
+      - name: Build and test passive observation
+        run: |
+          python3 variants/wide88/build.py /tmp/base/Carrot-Bridge-wide.87.apk "$ANDROID_HOME/build-tools/35.0.0" "$ANDROID_HOME/platforms/android-35/android.jar" /tmp/apktool.jar /tmp/json.jar /tmp/Carrot-Bridge-wide.88-unsigned.apk
+          cd /tmp && sha256sum Carrot-Bridge-wide.88-unsigned.apk > wide88-unsigned-SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wide88-unsigned-NOT-installable
+          path: |
+            /tmp/Carrot-Bridge-wide.88-unsigned.apk
+            /tmp/wide88-unsigned-SHA256SUMS.txt
+          if-no-files-found: error

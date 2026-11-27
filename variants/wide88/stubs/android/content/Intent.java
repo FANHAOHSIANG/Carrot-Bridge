@@ -1,0 +1,1 @@
+package android.content; import android.os.Bundle; public class Intent {private final String a;private final Bundle b; public Intent(String a,Bundle b){this.a=a;this.b=b;} public String getAction(){return a;}public Bundle getExtras(){return b;}}
