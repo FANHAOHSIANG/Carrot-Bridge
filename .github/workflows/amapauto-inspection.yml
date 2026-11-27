@@ -1,0 +1,35 @@
+name: AMap Auto official APK static inspection
+on:
+  push:
+    branches: [test/amapauto-apk-inspection]
+    paths: ['tools/amapauto-inspection/**','.github/workflows/amapauto-inspection.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Download official APK (temporary, not redistributed)
+        run: |
+          curl --fail --location --retry 2 --connect-timeout 15 --max-time 180 'https://mapdownload.autonavi.com/apps/auto/manual/V950/Auto_9.5.0.600013_release_signed.apk?u=9aacd8ab9d0031bbdabe9e30cc949729' -o /tmp/amapauto.apk
+          python3 -c 'import zipfile; assert zipfile.is_zipfile("/tmp/amapauto.apk")'
+      - name: Inspect manifest, DEX and native strings without executing APK
+        run: |
+          mkdir -p /tmp/amap-report
+          bt=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -1)
+          "$bt" verify --print-certs /tmp/amapauto.apk > /tmp/amap-report/signature.txt
+          aapt="$(dirname "$bt")/aapt"
+          "$aapt" dump badging /tmp/amapauto.apk > /tmp/amap-report/badging.txt
+          "$aapt" dump xmltree /tmp/amapauto.apk AndroidManifest.xml > /tmp/amap-report/manifest.txt
+          python3 tools/amapauto-inspection/scan.py /tmp/amapauto.apk > /tmp/amap-report/static.txt
+          head -c 1000 /tmp/amap-report/static.txt
+          rm /tmp/amapauto.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: amapauto-static-analysis-report
+          path: /tmp/amap-report/
+          retention-days: 7
