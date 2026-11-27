@@ -18,10 +18,16 @@ def build(a,w):
     logger=pkg/'WideBridgeLog.smali'
     s=logger.read_text()
     old='0x400000'
-    assert len(re.findall(r'(?m)^\s*const(?:/high16)? [vp]\d+, 0x400000\s*$',s))==1,'unexpected logger rotation literal'
-    s=re.sub(r'(?m)^(\s*const(?:/high16)? [vp]\d+, )0x400000(\s*)$',r'\g<1>0x1000000\2',s)
-    assert '12 MB' in s and 'wide.73' in s,'unexpected logger labels'
-    logger.write_text(s.replace('12 MB','48 MB').replace('wide.73','wide.86'))
+    assert len(re.findall(r'(?m)^\s*const(?:-wide)?(?:/high16|/32)? [vp]\d+, 0x400000\s*$',s))==1,'unexpected logger rotation literal'
+    s=re.sub(r'(?m)^(\s*const(?:-wide)?(?:/high16|/32)? [vp]\d+, )0x400000(\s*)$',r'\g<1>0x1000000\2',s)
+    assert '12 MB' in s,'unexpected logger capacity label'
+    logger.write_text(s.replace('12 MB','48 MB'))
+    versions=0
+    for p in pkg.glob('WideBridgeLog*.smali'):
+        text=p.read_text()
+        versions+=text.count('wide.73')
+        if 'wide.73' in text:p.write_text(text.replace('wide.73','wide.86'))
+    assert versions>=1,'unexpected log start version label'
     # Remove existing trace class only and assemble fresh implementation.
     target.unlink()
     run('javac','--release','8','-cp',a.json,'-d',classes,HERE/'WideAmapLinkTrace.java',HERE/'ObservationChecks.java')
