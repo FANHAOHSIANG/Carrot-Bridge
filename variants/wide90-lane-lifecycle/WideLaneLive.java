@@ -12,6 +12,17 @@ public final class WideLaneLive {
     private static String selected="";
     private static long epoch, lastLink=-1, path=-1, progress=-1, receipt=-1, wall=-1;
     private static JSONObject candidate;
+    private static long lastDiagnostic=-1;
+    private static String diagnosticState="";
+    private static void trace(String state,long now){
+        try{
+            if(!WideBridgeLog.recording()||(state.equals(diagnosticState)&&lastDiagnostic>=0&&now>=lastDiagnostic&&now-lastDiagnostic<1000))return;
+            diagnosticState=state;lastDiagnostic=now;
+            JSONObject d=new JSONObject().put("state",state).put("source",selected).put("control_input",false);
+            if(candidate!=null&&receipt>=0&&now>=receipt)d.put("observation_age_ms",now-receipt).put("count",candidate.optInt("count",0));
+            WideBridgeLog.event("amap_lane_wire_attempt",d);
+        }catch(Exception ignored){}
+    }
     private static void clear(){candidate=null;receipt=wall=-1;}
     private static void clearAuto(){clear();autoAt=autoSeg=autoTotal=autoRemain=autoPoint=-1;}
     public static synchronized void select(String name){
@@ -83,8 +94,8 @@ public final class WideLaneLive {
             long now=SystemClock.elapsedRealtime(),w=System.currentTimeMillis();
             Object ts=stamps==null?null:stamps.get(stream);
             boolean auto="com.autonavi.amapauto".equals(selected);
-            if(candidate==null||wall<=0||w<wall||!(ts instanceof Long))return out;
-            if(auto ? (!autoFresh(now)||w-wall>=AUTO_MAX_AGE) : (!fresh(receipt,now)||w-wall>=TTL))return out;
+            if(candidate==null||wall<=0||w<wall||!(ts instanceof Long)){trace("no_candidate_or_stamp",now);return out;}
+            if(auto ? (!autoFresh(now)||w-wall>=AUTO_MAX_AGE) : (!fresh(receipt,now)||w-wall>=TTL)){trace("expired",now);return out;}
             long stamp=(Long)ts;
             if(stamp<=0||w<stamp||w-stamp>=TTL||(!auto&&Math.abs(stamp-wall)>MATCH))return out;
             if("com.autonavi.minimap".equals(selected)&&!fresh(progress,now))return out;
@@ -92,6 +103,7 @@ public final class WideLaneLive {
             out.put(FIELD,new JSONObject().put("version",1).put("scope","display_only")
                 .put("generated_at_ms",auto?stamp:wall).put("observed_at_ms",wall)
                 .put("observation_age_ms",now-receipt).put("candidate",candidate));
+            trace("decorated_not_acknowledged",now);
             return out;
         }catch(Exception invalid){return value;}
     }
