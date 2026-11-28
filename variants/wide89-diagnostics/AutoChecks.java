@@ -52,6 +52,20 @@ public final class AutoChecks {
         ok(!candidate.getBoolean("control_input"),"no control");
         lanePacket.putString("EXTRA_DRIVE_WAY","{\"drive_way_enabled\":false}");
         ok("withdrawn".equals(WideAutoObservation.decode(lanePacket).getJSONObject("lane_candidate").getString("status")),"withdraw");
-        System.out.println("wide89 diagnostic flag checks passed");
+        WideLaneLive.select("com.autonavi.amapauto");
+        lanePacket.putString("EXTRA_DRIVE_WAY","{\"drive_way_enabled\":true,\"drive_way_size\":1,\"drive_way_info\":[{\"drive_way_number\":0,\"drive_way_lane_Back_icon\":0,\"trafficLaneAdvised\":true}]}");
+        WideBridgeLog.enabled=false;WideAutoObservation.capture(new Intent("AUTONAVI_STANDARD_BROADCAST_SEND",lanePacket));
+        java.util.Map<String,Long> stamps=new java.util.HashMap<>();stamps.put("guidance_current",System.currentTimeMillis());
+        JSONObject guidance=new JSONObject().put("distance_m",100);
+        JSONObject live=WideLaneLive.decorate("guidance_current",guidance,stamps);
+        ok(live.has("amap_lane_candidate")&&!guidance.has("amap_lane_candidate")&&live.getInt("distance_m")==100,"live copy independent of recorder");
+        WideLaneLive.select("com.autonavi.minimap");ok(!WideLaneLive.decorate("guidance_current",live,stamps).has("amap_lane_candidate"),"source clears");
+        WideLaneLive.reset(2);
+        WideLaneLive.link(2,4,new JSONObject().put("pathID",12),1000,System.currentTimeMillis());
+        WideLaneLive.link(2,14,new JSONObject().put("laneCount",1).put("backLane",new JSONArray("[0]")).put("frontLane",new JSONArray("[0]")),1000,System.currentTimeMillis());
+        ok(WideLaneLive.decorate("guidance_current",guidance,stamps).has("amap_lane_candidate"),"Link live");
+        WideLaneLive.link(2,100,null,1000,System.currentTimeMillis());
+        ok(!WideLaneLive.decorate("guidance_current",guidance,stamps).has("amap_lane_candidate"),"stop clears");
+        System.out.println("wide89 diagnostic and live display checks passed");
     }
 }

@@ -1,2 +1,2 @@
-# wide.89 雙高德 App 內車道候選解析
-以已發布的 exact wide.88 APK 為基底，沿用原有獲准的 Auto 廣播與 Link 診斷接收掛鉤。正常啟用既有診斷紀錄後，Auto 13012 的 EXTRA_DRIVE_WAY 與 Link 14 的 data 由 Android Java 共用 WideLaneCandidate 即時正規化成 lane_candidate。輸出在原診斷 JSON 中，包含來源、圖示順序、方向代碼、推薦候選、未知/撤回狀態；截斷不輸出候選。未知推薦不填 false，未核對畫面語意/空間配對，禁止車控。保留既有 privacy、限流、來源選擇、導航與控制功能。尚未接入 Navi v2 即時傳送或 HUD；沒有路線作用域/TTL 的持續狀態，不能直接拿舊候選指引。CI 產生 unsigned APK，須以原授權簽章簽署後才能安裝。本分支不覆蓋既有正式版。
+# wide.89 Android 雙來源即時唯讀觀察
+以已發布 wide.88 為基底（不替換舊 tag）。既有授權 Link 和車機版 accepted receiver 繼續使用，診斷及即時解析共用 Java 候選器。新增 guidance_current.amap_lane_candidate v1 display_only，原始導航控制欄位原樣保留，不映射 lane_current.road_category、current_lane、available 等。車機版依來源選擇、明確撤回及 2 秒 TTL，無可驗證路線 ID；一般版依來源、Link epoch、最近 pathID/進度、路線切換、停止、到達及 TTL。來源時間與 guidance 原始戳差超過 1 秒不傳，沒有新鮮既有引導不另發封包。不是空間配對或已驗證推薦。C4 需配套獨立分支。CI 驗證 exact APK smali hooks 及 Java 測試，生成未簽署 APK；原憑證簽署及實車測試仍必要。

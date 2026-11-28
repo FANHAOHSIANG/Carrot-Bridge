@@ -2,6 +2,7 @@
 import argparse,hashlib,re,struct,subprocess,tempfile
 from pathlib import Path
 from zipfile import ZipFile
+from live_patch import apply
 HERE=Path(__file__).resolve().parent
 BASE='0cbe7761a024372a9064671064a04ab9268e8d818cd3e7fc307286c9b375ef5a'
 SIG=re.compile(r'META-INF/(?:MANIFEST\.MF|[^/]+\.(?:SF|RSA|DSA|EC))',re.I)
@@ -21,12 +22,13 @@ def build(a,w):
     trace=pkg/'WideAmapLinkTrace.smali'
     assert trace.is_file(),'expected Link trace hook class'
     trace.unlink()
+    apply(pkg)
     for name in ('WideBridgeLog','WideBridge','WideTelemetry','WideCamera'):
         for p in pkg.glob(name+'*.smali'):
             s=p.read_text()
             if 'wide.88' in s:p.write_text(s.replace('wide.88','wide.89'))
     run('javac','--release','8','-cp',a.json,'-d',stubs,*sorted((HERE.parent/'wide88/stubs').rglob('*.java')))
-    run('javac','--release','8','-cp',str(stubs)+':'+str(a.json),'-d',classes,HERE/'WideAutoObservation.java',HERE/'WideAmapLinkTrace.java',HERE/'WideLaneCandidate.java')
+    run('javac','--release','8','-cp',str(stubs)+':'+str(a.json),'-d',classes,HERE/'WideAutoObservation.java',HERE/'WideAmapLinkTrace.java',HERE/'WideLaneCandidate.java',HERE/'WideLaneLive.java')
     run('javac','--release','8','-cp',str(stubs)+':'+str(a.json)+':'+str(classes),'-d',tests,HERE/'AutoChecks.java',HERE/'ObservationChecks.java')
     run('java','-cp',':'.join(map(str,[stubs,a.json,classes,tests])),'com.navipilot.obf.AutoChecks')
     run('java','-cp',':'.join(map(str,[stubs,a.json,classes,tests])),'com.navipilot.obf.ObservationChecks')

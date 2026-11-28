@@ -21,6 +21,7 @@ public final class WideAutoObservation {
         return t!=10001 && t!=12205 && t!=13011;
     }
     public static synchronized void capture(Intent i) {
+        WideLaneLive.auto(i); // accepted source hook, independent of diagnostic recording
         try {
             if(!WideBridgeLog.recording() || i==null ||
                !"AUTONAVI_STANDARD_BROADCAST_SEND".equals(i.getAction())) return;
