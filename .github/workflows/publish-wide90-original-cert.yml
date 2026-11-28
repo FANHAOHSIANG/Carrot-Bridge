@@ -1,0 +1,48 @@
+name: Publish verified original-signed wide90 prerelease
+on:
+  push:
+    branches: [test/wide90-lane-lifecycle]
+    paths: ['release/wide90-same-cert/**','.github/workflows/publish-wide90-original-cert.yml']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'build-tools;35.0.0'
+          log-accepted-android-sdk-licenses: 'false'
+      - name: Reconstruct exact already-signed APK from verified unsigned build and public signature
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api repos/$GITHUB_REPOSITORY/actions/runs/46116117941 --jq '.conclusion + " " + .head_sha' | grep -Fx 'success a5e746fa858ddd18109cd5f9b12518cc3d7bc5dd'
+          mkdir -p /tmp/unsigned /tmp/publish
+          gh run download 46116117941 --name wide90-unsigned-NOT-installable --dir /tmp/unsigned
+          cd /tmp/unsigned
+          sha256sum -c wide90-unsigned-SHA256SUMS.txt
+          cd "$GITHUB_WORKSPACE"
+          python3 release/wide90-same-cert/reconstruct.py /tmp/unsigned/Carrot-Bridge-wide.90-unsigned.apk /tmp/publish/Carrot-Bridge-wide.90.apk
+          bt="$ANDROID_HOME/build-tools/35.0.0"
+          "$bt/apksigner" verify --min-sdk-version 31 --verbose --print-certs /tmp/publish/Carrot-Bridge-wide.90.apk > /tmp/cert.txt
+          grep -F 'Verified using v3 scheme (APK Signature Scheme v3): true' /tmp/cert.txt
+          grep -Fx 'Signer #1 certificate SHA-256 digest: eb0f6a44174aecf09cedc237be2ca0305ea491d47b381407d31e903acbd34b46' /tmp/cert.txt
+          "$bt/zipalign" -P 16 -c 4 /tmp/publish/Carrot-Bridge-wide.90.apk
+          cd /tmp/publish
+          echo 'a1c0a626bed0301ceca335cff137532a1dd75b7ab52789abacba928b31011d23  Carrot-Bridge-wide.90.apk' > SHA256SUMS.txt
+          sha256sum -c SHA256SUMS.txt
+      - name: Publish distinct prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view wide.90 >/dev/null 2>&1; then exit 1; fi
+          gh release create wide.90 /tmp/publish/Carrot-Bridge-wide.90.apk /tmp/publish/SHA256SUMS.txt --target "$GITHUB_SHA" --title 'Carrot Bridge wide.90｜車道候選生命週期與 HUD 觀察測試' --notes-file release/wide90-same-cert/NOTES.md --prerelease --latest=false
+          gh release view wide.90 --json isPrerelease,assets,url
