@@ -1,0 +1,53 @@
+name: wide89 temporary PRE sender mitigation build
+on:
+  push:
+    branches: [test/wide88-amapauto-route-probe]
+    paths: ['variants/wide89/**','.github/workflows/wide89-pre-mitigation.yml']
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-35 build-tools;35.0.0'
+          log-accepted-android-sdk-licenses: 'false'
+      - name: Download pinned base and dependencies
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download wide.88 --pattern Carrot-Bridge-wide.88.apk --dir /tmp/base
+          curl -fL --retry 5 --retry-delay 5 --retry-all-errors https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar -o /tmp/apktool.jar
+          curl -fL --retry 5 --retry-delay 5 --retry-all-errors https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar -o /tmp/json.jar
+      - name: Build temporary PRE sender mitigation
+        run: |
+          python3 variants/wide89/build.py /tmp/base/Carrot-Bridge-wide.88.apk "$ANDROID_HOME/build-tools/35.0.0" "$ANDROID_HOME/platforms/android-35/android.jar" /tmp/apktool.jar /tmp/json.jar /tmp/Carrot-Bridge-wide.89-unsigned.apk
+          cd /tmp && sha256sum Carrot-Bridge-wide.89-unsigned.apk > wide89-unsigned-SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wide89-unsigned-NOT-installable
+          path: |
+            /tmp/Carrot-Bridge-wide.89-unsigned.apk
+            /tmp/wide89-unsigned-SHA256SUMS.txt
+          if-no-files-found: error
+      - name: Preserve public Android SDK signing tool for local signing
+        run: |
+          set -euo pipefail
+          cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" /tmp/apksigner.jar
+          cd /tmp && sha256sum apksigner.jar > apksigner-SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wide89-public-sdk-apksigner
+          path: |
+            /tmp/apksigner.jar
+            /tmp/apksigner-SHA256SUMS.txt
+          if-no-files-found: error
