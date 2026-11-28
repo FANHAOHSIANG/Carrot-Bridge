@@ -44,6 +44,14 @@ public final class AutoChecks {
         ok(!lanes.toString().contains("private-unknown")&&!lanes.toString().contains("private-other"),"flag privacy");
         Bundle direct=new Bundle(); direct.putString("trafficLaneAdvised","TRUE");
         ok(WideAutoObservation.decode(direct).getJSONObject("payload").get("trafficLaneAdvised")==Boolean.TRUE,"direct bundle flag");
+        Bundle lanePacket=new Bundle();lanePacket.putInt("KEY_TYPE",13012);
+        lanePacket.putString("EXTRA_DRIVE_WAY","{\"drive_way_enabled\":true,\"drive_way_size\":2,\"drive_way_info\":[{\"drive_way_number\":1,\"drive_way_lane_Back_icon\":\"15\",\"trafficLaneAdvised\":\"true\"},{\"drive_way_number\":0,\"drive_way_lane_Back_icon\":0,\"trafficLaneAdvised\":false}]}");
+        JSONObject candidate=WideAutoObservation.decode(lanePacket).getJSONObject("lane_candidate");
+        ok("recommendation_candidate".equals(candidate.getString("status")),"app Auto candidate");
+        ok(candidate.getJSONArray("lanes").getJSONObject(1).getBoolean("advised"),"sorted advice");
+        ok(!candidate.getBoolean("control_input"),"no control");
+        lanePacket.putString("EXTRA_DRIVE_WAY","{\"drive_way_enabled\":false}");
+        ok("withdrawn".equals(WideAutoObservation.decode(lanePacket).getJSONObject("lane_candidate").getString("status")),"withdraw");
         System.out.println("wide89 diagnostic flag checks passed");
     }
 }

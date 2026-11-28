@@ -71,9 +71,12 @@ public final class WideAutoObservation {
             if(candidate(key))payload.put(key,budget.copy(v,key,0));
             else if(v instanceof Number || v instanceof Boolean || v instanceof Bundle)payload.put(key,budget.copy(v,key,0));
         }
-        return new JSONObject().put("key_types",types).put("payload",payload)
+        JSONObject out=new JSONObject().put("key_types",types).put("payload",payload)
             .put("truncated",budget.cut).put("visited_nodes",budget.nodes)
             .put("raw_bytes_preserved",false).put("redacted_fields",budget.redacted);
+        if(!budget.cut && b.get("KEY_TYPE") instanceof Number && ((Number)b.get("KEY_TYPE")).doubleValue()==13012)
+            out.put("lane_candidate",WideLaneCandidate.auto(payload.optJSONObject("EXTRA_DRIVE_WAY")));
+        return out;
     }
     static final class Budget {
         int nodes,chars,redacted;boolean cut;
