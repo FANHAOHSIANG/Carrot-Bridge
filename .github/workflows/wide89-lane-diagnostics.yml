@@ -1,0 +1,22 @@
+name: Lane flag diagnostic checks
+on:
+  push:
+    branches: [test/wide89-lane-diagnostics]
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: |
+          curl -fsSL --retry 3 https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar -o /tmp/json.jar
+          mkdir -p /tmp/classes
+          javac -cp /tmp/json.jar -d /tmp/classes $(find variants/wide88/stubs -name '*.java') variants/wide89-diagnostics/WideAutoObservation.java variants/wide89-diagnostics/AutoChecks.java
+          java -cp /tmp/json.jar:/tmp/classes com.navipilot.obf.AutoChecks
